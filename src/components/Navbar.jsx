@@ -89,14 +89,6 @@ const Navbar = () => {
             <div className="category">{category}</div>
           </Link>
         ))}
-        <Link
-          to="/"
-          className={`category-link ${
-            location.pathname === "/tentangkami" ? "active" : ""
-          }`}
-        >
-          <div className="category">Tentang Kami</div>
-        </Link>
       </div>
       <div
         className={`dropdown-menu ${showMenu ? "show" : ""}`}

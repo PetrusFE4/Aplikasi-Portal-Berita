@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -10,7 +10,7 @@ const CategoryPage = () => {
 
   useEffect(() => {
     const fetchCategoryData = async () => {
-      setLoading(true); // Set loading state true before fetching data
+      setLoading(true);
       try {
         const response = await axios.get(
           "https://apiberita.pandekakode.com/api/artikels"
@@ -18,7 +18,7 @@ const CategoryPage = () => {
 
         const categoryArticles = response.data.data
           .filter((article) => article.categories.includes(categoryName))
-          .sort((a, b) => new Date(b.published_at) - new Date(a.published_at)); // Sort articles by date
+          .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
 
         setArticles(categoryArticles);
         setLoading(false);
@@ -36,7 +36,7 @@ const CategoryPage = () => {
         const sortedNews = response.data.data.sort(
           (a, b) => new Date(b.published_at) - new Date(a.published_at)
         );
-        setLatestNews(sortedNews.slice(0, 10)); // Get the latest 5 news articles
+        setLatestNews(sortedNews.slice(0, 10));
       } catch (error) {
         console.error("Error fetching latest news:", error);
       }
@@ -85,18 +85,22 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
+                <Link
+                  to={`/news/${article.id}`}
+                >
                 <h3 className="text-sm font-bold mt-2 line-clamp-4">
                   {article.title}
                 </h3>
+                </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(article.description, 10)}
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to={`/news/${article.id}`}
                   className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
                   Read More
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -114,16 +118,20 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(articles[2].published_at)}
                 </p>
+                <Link
+                  to={`/news/${articles[2].id}`}
+                >
                 <h2 className="text-lg font-bold mt-2">{articles[2].title}</h2>
+                </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(articles[2].description, 10)}
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to={`/news/${articles[2].id}`}
                   className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
                   Read More
-                </a>
+                </Link>
               </>
             )}
           </div>
@@ -139,18 +147,22 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
+                <Link
+                  to={`/news/${article.id}`}
+                >
                 <h3 className="text-sm font-bold mt-2 line-clamp-4">
                   {article.title}
                 </h3>
+                </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(article.description, 10)}
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to={`/news/${article.id}`}
                   className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
                   Read More
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -171,7 +183,11 @@ const CategoryPage = () => {
                   className="w-48 object-cover flex-shrink-0 rounded-lg shadow-lg"
                 />
                 <div className="ml-4 flex-grow">
-                  <h3 className="text-sm font-bold mt-2">{news.title}</h3>
+                  <Link
+                  to={`/news/${news.id}`}
+                  >
+                  <h3 className="text-sm font-bold mt-2">{news.title}</h3>           
+                  </Link>
                   <span className="block text-xs text-gray-600 mt-1">
                     {formatDateIndonesian(news.published_at)}
                   </span>
@@ -180,12 +196,12 @@ const CategoryPage = () => {
                       ? news.description.substring(0, 150) + "..."
                       : news.description}
                   </p>
-                  <a
-                    href="#"
+                  <Link
+                    to={`/news/${news.id}`}
                     className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Read More
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
