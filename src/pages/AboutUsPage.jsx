@@ -4,7 +4,7 @@ import { FaRegEnvelope, FaPhone, FaFacebookSquare, FaInstagram, FaTwitterSquare 
 const TentangKamiPage = () => {
   return (
     <div className="mx-auto max-w-screen-lg p-4 light theme-light mt-20 md:mt-36">
-      <h1 className="text-4xl font-bold mb-8">Tentang Kami</h1>
+      <h1 className="text-2xl font-bold mb-8">Tentang Kami</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Visi dan Misi */}
         <div>

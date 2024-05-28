@@ -61,7 +61,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-screen-lg p-4 mt-20 md:mt-32">
+    <div className="mx-auto max-w-screen-lg p-4 mt-20 md:mt-36">
       <h1 className="text-2xl font-bold mb-8">
         Berita {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
       </h1>
