@@ -1,0 +1,153 @@
+/* Navbar Styles */
+.navbar-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* .navbar-container {
+  width: 100%;
+  background-color: white; 
+  position: relative;
+  z-index: 1000;
+} */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: white; /* Bright navbar color */
+  color: #333; /* Darker text color */
+}
+
+.navbar-left,
+.navbar-center,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.logo {
+  height: 50px;
+}
+
+.categories {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  color: #333; /* Category text color */
+}
+
+.category {
+  margin: 0 15px; /* Reduce spacing between categories */
+  cursor: pointer;
+  font-weight: bold; /* Bold category text */
+}
+
+.separator {
+  width: calc(
+    100% - 40px
+  ); /* Reduce separator width by 20px padding on each side */
+  height: 2px; /* Set line thickness */
+  background-color: black; /* Change line color to black */
+  margin: 10px auto; /* Add 10px margin above and below, and center */
+  border: none; /* Remove border for cleaner look */
+}
+
+.category-link {
+  text-decoration: none; /* Remove underline from links */
+  color: black; /* Black text color */
+  transition: color 0.3s; /* Transition effect for color change on hover */
+}
+
+.category-link:hover,
+.dropdown-link:hover {
+  color: #888; /* Gray text color on hover */
+}
+
+.category-link.active,
+.dropdown-link.active {
+  color: grey; /* Grey text color when active */
+  font-weight: bold; /* Bold text when active */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: white;
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 2000; /* Ensure dropdown menu is in front of other elements */
+  max-height: 0; /* Initial max-height for transition */
+  opacity: 0; /* Initial opacity for transition */
+  visibility: hidden; /* Initially hidden */
+  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0.3s; /* Smooth transitions */
+}
+
+.dropdown-menu.show {
+  max-height: 300px; /* Adjust based on the content height */
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-link {
+  color: black; /* Black text color */
+  text-decoration: none; /* Remove underline */
+}
+
+.dropdown-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+.side-news-item {
+  margin-bottom: 20px; /* Add spacing between side news items */
+  flex-grow: 1; /* Grow side news items */
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    display: block; /* Display dropdown menu on mobile */
+    color: black; /* Dropdown menu text color */
+    position: fixed; /* Fixed position for dropdown menu */
+    top: 70px; /* Adjust dropdown menu position */
+    right: 0; /* Align dropdown menu to the right */
+    width: 100%; /* Full width dropdown menu */
+    max-height: calc(100vh - 70px); /* Max height for dropdown menu */
+    overflow-y: auto; /* Scroll if dropdown menu is too long */
+    border-top: 1px solid #ccc; /* Add top border */
+    border-radius: 0 0 5px 5px; /* Round bottom corners */
+  }
+
+  .categories {
+    display: none; /* Hide categories on mobile */
+  }
+
+  .side-news-item {
+    margin-bottom: 10px; /* Reduce spacing between side news items on mobile */
+    width: 100%; /* Full width for side news items on mobile */
+  }
+}
