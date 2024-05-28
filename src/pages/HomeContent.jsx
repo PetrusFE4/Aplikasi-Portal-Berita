@@ -42,9 +42,7 @@ const HomeContent = () => {
 
   return (
     <div
-      className="mx-auto max-w-screen-lg p-4 light theme-light"
-      style={{ marginTop: "100px" }}
-    >
+      className="mx-auto max-w-screen-lg p-4 light theme-light mt-14 md:mt-32">
       {loading && (
         <div className="flex justify-center items-center h-screen">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
@@ -66,12 +64,12 @@ const HomeContent = () => {
               <Link
               to={`/news/${mainNews.id}`}
               >
-              <h2 className="text-xl font-bold mt-2  hover:text-gray-600">{mainNews.title}</h2>
+              <h2 className="text-xl font-bold mt-2  hover:text-gray-500">{mainNews.title}</h2>
               </Link>
 
               <Link
                 to={`/news/${mainNews.id}`}
-                className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:text-gray-600"
+                className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
               >
                 Read More
               </Link>
@@ -92,11 +90,11 @@ const HomeContent = () => {
                 <Link
                   to={`/news/${news.id}`}
                 >
-                <h3 className="text-sm font-bold mt-2">{mainNews.title}</h3>
+                <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{mainNews.title}</h3>
                 </Link>
                 <Link
                   to={`/news/${news.id}`}
-                  className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
                 </Link>
@@ -124,7 +122,7 @@ const HomeContent = () => {
                     <Link
                       to={`/news/${latestNews[0].id}`}
                     >
-                      <h3 className="text-sm font-bold mt-2">
+                      <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
                           {latestNews[0].title}
                       </h3>
                     </Link>
@@ -139,7 +137,7 @@ const HomeContent = () => {
                     </p>
                     <Link
                       to={`/news/${latestNews[0].id}`}
-                      className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                     >
                       Read More
                     </Link>
@@ -159,7 +157,7 @@ const HomeContent = () => {
                   <Link
                       to={`/news/${news.id}`}
                     >
-                    <h3 className="text-sm font-bold mt-2">{news.title}</h3>
+                    <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{news.title}</h3>
                   </Link>
                     <span className="block text-xs text-gray-600 mt-1">
                       {formatDateIndonesian(news.published_at)}
@@ -171,7 +169,7 @@ const HomeContent = () => {
                     </p>
                     <Link
                       to={`/news/${news.id}`}
-                      className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                     >
                       Read More
                     </Link>
@@ -202,7 +200,7 @@ const HomeContent = () => {
               <Link
                   to={`/news/${news.id}`}
                     >
-                <h3 className="text-base font-bold mt-2 line-clamp-2">
+                <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
                   {news.title}
                 </h3>
               </Link>
@@ -213,7 +211,7 @@ const HomeContent = () => {
                 </p>
                 <Link
                   to={`/news/${news.id}`}
-                  className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
                 </Link>

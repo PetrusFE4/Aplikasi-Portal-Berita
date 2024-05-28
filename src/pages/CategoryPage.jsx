@@ -61,7 +61,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-screen-lg p-4" style={{ marginTop: "130px" }}>
+    <div className="mx-auto max-w-screen-lg p-4 mt-20 md:mt-32">
       <h1 className="text-2xl font-bold mb-8">
         Berita {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
       </h1>
@@ -88,7 +88,7 @@ const CategoryPage = () => {
                 <Link
                   to={`/news/${article.id}`}
                 >
-                <h3 className="text-sm font-bold mt-2 line-clamp-4">
+                <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
                   {article.title}
                 </h3>
                 </Link>
@@ -97,7 +97,7 @@ const CategoryPage = () => {
                 </p>
                 <Link
                   to={`/news/${article.id}`}
-                  className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
                 </Link>
@@ -121,14 +121,14 @@ const CategoryPage = () => {
                 <Link
                   to={`/news/${articles[2].id}`}
                 >
-                <h2 className="text-lg font-bold mt-2">{articles[2].title}</h2>
+                <h2 className="text-lg font-bold mt-2 hover:text-gray-500">{articles[2].title}</h2>
                 </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(articles[2].description, 10)}
                 </p>
                 <Link
                   to={`/news/${articles[2].id}`}
-                  className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
                 </Link>
@@ -150,7 +150,7 @@ const CategoryPage = () => {
                 <Link
                   to={`/news/${article.id}`}
                 >
-                <h3 className="text-sm font-bold mt-2 line-clamp-4">
+                <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
                   {article.title}
                 </h3>
                 </Link>
@@ -159,7 +159,7 @@ const CategoryPage = () => {
                 </p>
                 <Link
                   to={`/news/${article.id}`}
-                  className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
                 </Link>
@@ -186,7 +186,7 @@ const CategoryPage = () => {
                   <Link
                   to={`/news/${news.id}`}
                   >
-                  <h3 className="text-sm font-bold mt-2">{news.title}</h3>           
+                  <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{news.title}</h3>           
                   </Link>
                   <span className="block text-xs text-gray-600 mt-1">
                     {formatDateIndonesian(news.published_at)}
@@ -198,7 +198,7 @@ const CategoryPage = () => {
                   </p>
                   <Link
                     to={`/news/${news.id}`}
-                    className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                   >
                     Read More
                   </Link>
