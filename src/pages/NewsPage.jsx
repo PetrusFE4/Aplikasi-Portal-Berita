@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const NewsPage = () => {
   const { id } = useParams();
@@ -11,11 +11,13 @@ const NewsPage = () => {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://apiberita.pandekakode.com/api/artikels/${id}`);
+        const response = await axios.get(
+          `https://apiberita.pandekakode.com/api/artikels/${id}`
+        );
         setNews(response.data.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching the news:', error);
+        console.error("Error fetching the news:", error);
         setLoading(false);
       }
     };
@@ -39,7 +41,11 @@ const NewsPage = () => {
     <div className="min-h-screen bg-gray-100 flex justify-center p-4">
       <div className="w-3/4 bg-white p-8 shadow-lg rounded-l-lg">
         {news.image_url && (
-          <img src={news.image_url} alt="Cover" className="w-full h-64 object-cover rounded" />
+          <img
+            src={news.image_url}
+            alt="Cover"
+            className="w-full h-64 object-cover rounded"
+          />
         )}
         <h1 className="text-3xl font-bold mt-4">{news.title}</h1>
         <p className="mt-4 text-justify">{news.content}</p>
