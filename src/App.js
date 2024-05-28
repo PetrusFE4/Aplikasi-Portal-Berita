@@ -5,6 +5,7 @@ import HomeContent from './pages/HomeContent';
 import CategoryPage from './pages/CategoryPage';
 import Footer from './components/Footer';
 import NewsPage from './pages/NewsPage';
+import AboutUsPage from './pages/AboutUsPage';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/" element={<HomeContent />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/news/:id" element={<NewsPage />} />
+        <Route path="/about-us" element={<AboutUsPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

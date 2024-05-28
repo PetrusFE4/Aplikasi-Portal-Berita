@@ -89,6 +89,10 @@ const Navbar = () => {
             <div className="category">{category}</div>
           </Link>
         ))}
+        {/* Tambahkan link ke AboutUsPage */}
+        <Link to="/about-us" className="category-link">
+          <div className="category">Tentang Kami</div>
+        </Link>
       </div>
       <div
         className={`dropdown-menu ${showMenu ? "show" : ""}`}
