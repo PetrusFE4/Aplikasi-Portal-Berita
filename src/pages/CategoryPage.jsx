@@ -85,12 +85,10 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
-                <Link
-                  to={`/news/${article.id}`}
-                >
-                <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
-                  {article.title}
-                </h3>
+                <Link to={`/news/${article.id}`}>
+                  <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
+                    {article.title}
+                  </h3>
                 </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(article.description, 10)}
@@ -118,10 +116,10 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(articles[2].published_at)}
                 </p>
-                <Link
-                  to={`/news/${articles[2].id}`}
-                >
-                <h2 className="text-lg font-bold mt-2 hover:text-gray-500">{articles[2].title}</h2>
+                <Link to={`/news/${articles[2].id}`}>
+                  <h2 className="text-lg font-bold mt-2 hover:text-gray-500">
+                    {articles[2].title}
+                  </h2>
                 </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(articles[2].description, 10)}
@@ -147,12 +145,10 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
-                <Link
-                  to={`/news/${article.id}`}
-                >
-                <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
-                  {article.title}
-                </h3>
+                <Link to={`/news/${article.id}`}>
+                  <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
+                    {article.title}
+                  </h3>
                 </Link>
                 <p className="text-sm mt-2">
                   {truncateDescription(article.description, 10)}
@@ -183,10 +179,10 @@ const CategoryPage = () => {
                   className="w-48 object-cover flex-shrink-0 rounded-lg shadow-lg"
                 />
                 <div className="ml-4 flex-grow">
-                  <Link
-                  to={`/news/${news.id}`}
-                  >
-                  <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{news.title}</h3>           
+                  <Link to={`/news/${news.id}`}>
+                    <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
+                      {news.title}
+                    </h3>
                   </Link>
                   <span className="block text-xs text-gray-600 mt-1">
                     {formatDateIndonesian(news.published_at)}
