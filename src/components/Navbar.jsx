@@ -123,6 +123,17 @@ const Navbar = () => {
               </Link>
             </li>
           ))}
+          <li>
+            <Link
+              to="/about-us"
+              className={`dropdown-link ${
+                location.pathname === "/about-us" ? "active" : ""
+              }`}
+              onClick={handleCategoryClick}
+            >
+              Tentang Kami
+            </Link>
+          </li>
         </ul>
       </div>
     </div>
