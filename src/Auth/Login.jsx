@@ -1,8 +1,8 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const Login = () => {
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // Reload the page on the first load
     if (!sessionStorage.getItem("hasReloaded")) {
@@ -16,6 +16,18 @@ const Login = () => {
     }
   }, []);
 
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    // Add logic to handle forgot password
+    alert("Forgot Password clicked");
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    // Add logic to handle registration
+    alert("Register here clicked");
+  };
+
   return (
     <>
       {loading ? (
@@ -25,34 +37,36 @@ const Login = () => {
           </div>
         </div>
       ) : (
-        <div class="font-[sans-serif] text-[#333] bg-white flex items-center justify-center md:h-screen p-4 ">
-          <div class="max-w-6xl rounded-md p-6">
-            <div class="grid md:grid-cols-2 items-center gap-8">
-              <div class="max-md:order-1">
+        <div className="font-[sans-serif] text-[#333] bg-white flex items-center justify-center md:h-screen p-4">
+          <div className="max-w-6xl rounded-md p-6">
+            <div className="grid md:grid-cols-2 items-center gap-8">
+              <div className="max-md:order-1">
                 <img
                   src="https://readymadeui.com/signin-image.webp"
-                  class="lg:w-11/12 w-full object-cover"
+                  className="lg:w-11/12 w-full object-cover"
                   alt="login-image"
                 />
               </div>
-              <form class="max-w-md w-full mx-auto">
-                <div class="mb-12">
-                  <h3 class="text-4xl font-extrabold text-blue-600">Sign in</h3>
+              <form className="max-w-md w-full mx-auto">
+                <div className="mb-12">
+                  <h3 className="text-4xl font-extrabold text-blue-600">
+                    Sign in
+                  </h3>
                 </div>
                 <div>
-                  <div class="relative flex items-center">
+                  <div className="relative flex items-center">
                     <input
                       name="email"
                       type="text"
                       required
-                      class="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                      className="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
                       placeholder="Enter email"
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#bbb"
                       stroke="#bbb"
-                      class="w-[18px] h-[18px] absolute right-2"
+                      className="w-[18px] h-[18px] absolute right-2"
                       viewBox="0 0 682.667 682.667"
                     >
                       <defs>
@@ -64,13 +78,13 @@ const Login = () => {
                         </clipPath>
                       </defs>
                       <g
-                        clip-path="url(#a)"
+                        clipPath="url(#a)"
                         transform="matrix(1.33 0 0 -1.33 0 682.667)"
                       >
                         <path
                           fill="none"
-                          stroke-miterlimit="10"
-                          stroke-width="40"
+                          strokeMiterlimit="10"
+                          strokeWidth="40"
                           d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                           data-original="#000000"
                         ></path>
@@ -82,20 +96,20 @@ const Login = () => {
                     </svg>
                   </div>
                 </div>
-                <div class="mt-8">
-                  <div class="relative flex items-center">
+                <div className="mt-8">
+                  <div className="relative flex items-center">
                     <input
                       name="password"
                       type="password"
                       required
-                      class="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                      className="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
                       placeholder="Enter password"
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#bbb"
                       stroke="#bbb"
-                      class="w-[18px] h-[18px] absolute right-2 cursor-pointer"
+                      className="w-[18px] h-[18px] absolute right-2 cursor-pointer"
                       viewBox="0 0 128 128"
                     >
                       <path
@@ -105,39 +119,41 @@ const Login = () => {
                     </svg>
                   </div>
                 </div>
-                <div class="flex items-center justify-between gap-2 mt-6">
-                  <div class="flex items-center">
+                <div className="flex items-center justify-between gap-2 mt-6">
+                  <div className="flex items-center">
                     <input
                       id="remember-me"
                       name="remember-me"
                       type="checkbox"
-                      class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <label for="remember-me" class="ml-3 block text-sm">
+                    <label htmlFor="remember-me" className="ml-3 block text-sm">
                       Remember me
                     </label>
                   </div>
                   <div>
                     <a
-                      href="jajvascript:void(0);"
-                      class="text-blue-600 text-sm hover:underline"
+                      href="#"
+                      onClick={handleForgotPassword}
+                      className="text-blue-600 text-sm hover:underline"
                     >
                       Forgot Password?
                     </a>
                   </div>
                 </div>
-                <div class="mt-12">
+                <div className="mt-12">
                   <button
                     type="button"
-                    class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                   >
                     Sign in
                   </button>
-                  <p class="text-sm text-center mt-8">
-                    Don't have an account{" "}
+                  <p className="text-sm text-center mt-8">
+                    Don't have an account
                     <a
-                      href="javascript:void(0);"
-                      class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
+                      href="#"
+                      onClick={handleRegister}
+                      className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
                     >
                       Register here
                     </a>

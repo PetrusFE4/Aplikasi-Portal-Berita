@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Kategori = () => {
   const [categories, setCategories] = useState([]);
@@ -13,14 +14,13 @@ const Kategori = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/artikels"
+          "https://apiberita.pandekakode.com/api/kategori"
         );
         console.log("API Response:", response.data);
-        // Extract unique categories from articles
-        const uniqueCategories = [
-          ...new Set(response.data.data.map((artikel) => artikel.categories)),
-        ];
-        setCategories(uniqueCategories);
+        const sortedCategories = response.data.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setCategories(sortedCategories);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching the data", error);
@@ -40,14 +40,21 @@ const Kategori = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Placeholder function for edit action
-  const handleEdit = (category) => {
-    alert(`Editing category: ${category}`);
-  };
-
-  // Placeholder function for delete action
-  const handleDelete = (category) => {
-    alert(`Deleting category: ${category}`);
+  // Function to handle delete action
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://apiberita.pandekakode.com/api/kategori/${id}`
+      );
+      if (response.data.success) {
+        // Remove the deleted category from the state
+        setCategories(categories.filter((category) => category.id !== id));
+        alert("Category deleted successfully");
+      }
+    } catch (error) {
+      console.error("Error deleting category", error);
+      alert("Error deleting category");
+    }
   };
 
   if (loading) {
@@ -64,13 +71,15 @@ const Kategori = () => {
         <h2 className="text-2xl font-semibold leading-tight mb-5">Kategori</h2>
         <div className="my-2 flex sm:flex-row flex-col mb-6">
           <div className="block relative">
-            <button
-              type="button"
-              className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-green-800 me-2 mb-2"
-            >
-              <FaPlusCircle className="mr-2" />
-              Tambahkan Kategori
-            </button>
+            <Link to="/admin/kategori/tambah">
+              <button
+                type="button"
+                className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-green-800 me-2 mb-2"
+              >
+                <FaPlusCircle className="mr-2" />
+                Tambahkan Kategori
+              </button>
+            </Link>
           </div>
         </div>
         <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
@@ -100,7 +109,7 @@ const Kategori = () => {
               </thead>
               <tbody>
                 {currentCategories.map((category, index) => (
-                  <tr key={index}>
+                  <tr key={category.id}>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap">
                         {(currentPage - 1) * itemsPerPage + index + 1}
@@ -108,20 +117,19 @@ const Kategori = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap">
-                        {category}
+                        {category.nama}
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm flex space-x-2">
                       <button
                         type="button"
-                        onClick={() => handleEdit(category)}
                         className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-blue-800"
                       >
                         Edit
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(category)}
+                        onClick={() => handleDelete(category.id)}
                         className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-red-800"
                       >
                         Delete

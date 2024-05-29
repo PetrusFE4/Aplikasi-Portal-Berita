@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Berita = () => {
   const [artikels, setArtikels] = useState([]);
@@ -40,6 +41,20 @@ const Berita = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://apiberita.pandekakode.com/api/artikels/${id}`
+      );
+      if (response.status === 200) {
+        // Remove the deleted article from the list
+        setArtikels(artikels.filter((artikel) => artikel.id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting article: ", error);
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -54,13 +69,15 @@ const Berita = () => {
         <h2 className="text-2xl font-semibold leading-tight mb-5">Berita</h2>
         <div className="my-2 flex sm:flex-row flex-col mb-6">
           <div className="block relative">
-            <button
-              type="button"
-              className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-green-800 me-2 mb-2"
-            >
-              <FaPlusCircle className="mr-2" />
-              Tambahkan Berita
-            </button>
+            <Link to="/admin/berita/tambah">
+              <button
+                type="button"
+                className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-green-800 me-2 mb-2"
+              >
+                <FaPlusCircle className="mr-2" />
+                Tambahkan Berita
+              </button>
+            </Link>
           </div>
         </div>
         <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
@@ -131,6 +148,7 @@ const Berita = () => {
                         Edit
                       </button>
                       <button
+                        onClick={() => handleDelete(artikel.id)}
                         type="button"
                         className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-red-800"
                       >
