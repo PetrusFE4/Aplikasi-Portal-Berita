@@ -41,8 +41,7 @@ const HomeContent = () => {
   };
 
   return (
-    <div
-      className="mx-auto max-w-screen-lg p-4 light theme-light mt-14 md:mt-32">
+    <div className="mx-auto max-w-screen-lg p-4 light theme-light mt-14 md:mt-32">
       {loading && (
         <div className="flex justify-center items-center h-screen">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
@@ -53,18 +52,20 @@ const HomeContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-8">
           {mainNews && (
             <div className="md:col-span-4">
-              <img
-                src={mainNews.image_url || placeholderImage}
-                alt={mainNews.title}
-                className="w-full h-96 object-cover rounded-lg shadow-lg"
-              />
+              <div className="relative overflow-hidden rounded-lg shadow-lg">
+                <img
+                  src={mainNews.image_url || placeholderImage}
+                  alt={mainNews.title}
+                  className="w-full h-96 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110  cursor-pointer"
+                />
+              </div>
               <span className="block text-xs text-gray-600 mt-2">
                 {formatDateIndonesian(mainNews.published_at)}
               </span>
-              <Link
-              to={`/news/${mainNews.id}`}
-              >
-              <h2 className="text-xl font-bold mt-2  hover:text-gray-500">{mainNews.title}</h2>
+              <Link to={`/news/${mainNews.id}`}>
+                <h2 className="text-xl font-bold mt-2 hover:text-gray-500">
+                  {mainNews.title}
+                </h2>
               </Link>
 
               <Link
@@ -79,18 +80,20 @@ const HomeContent = () => {
           <div className="md:col-span-1 space-y-4">
             {sideNews.map((news, index) => (
               <div className="mb-4" key={index}>
-                <img
-                  src={news.image_url || placeholderImage}
-                  alt={news.title}
-                  className="w-full h-54 object-cover rounded-lg shadow-lg"
-                />
+                <div className="relative overflow-hidden rounded-lg shadow-lg">
+                  <img
+                    src={news.image_url || placeholderImage}
+                    alt={news.title}
+                    className="w-full h-54 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110  cursor-pointer"
+                  />
+                </div>
                 <span className="block text-xs text-gray-600 mt-2">
                   {formatDateIndonesian(news.published_at)}
                 </span>
-                <Link
-                  to={`/news/${news.id}`}
-                >
-                <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{mainNews.title}</h3>
+                <Link to={`/news/${news.id}`}>
+                  <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
+                    {news.title}
+                  </h3>
                 </Link>
                 <Link
                   to={`/news/${news.id}`}
@@ -113,17 +116,17 @@ const HomeContent = () => {
             <div>
               {latestNews.length > 0 && (
                 <div className="mb-4">
-                  <img
-                    src={latestNews[0].image_url || placeholderImage}
-                    alt={latestNews[0].title}
-                    className="w-full h-68 object-cover rounded-lg shadow-lg"
-                  />
+                  <div className="relative overflow-hidden rounded-lg shadow-lg">
+                    <img
+                      src={latestNews[0].image_url || placeholderImage}
+                      alt={latestNews[0].title}
+                      className="w-full h-68 object-cover rounded-lg shadow-lg transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                    />
+                  </div>
                   <div className="mt-2">
-                    <Link
-                      to={`/news/${latestNews[0].id}`}
-                    >
+                    <Link to={`/news/${latestNews[0].id}`}>
                       <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
-                          {latestNews[0].title}
+                        {latestNews[0].title}
                       </h3>
                     </Link>
                     <span className="block text-xs text-gray-600 mt-1">
@@ -148,17 +151,19 @@ const HomeContent = () => {
             <div className="grid grid-cols-1 gap-4 md:gap-0">
               {latestNews.slice(1, 3).map((news, index) => (
                 <div className="flex mb-4" key={index}>
-                  <img
-                    src={news.image_url || placeholderImage}
-                    alt={news.title}
-                    className="w-48 object-cover flex-shrink-0 rounded-lg shadow-lg"
-                  />
+                  <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                    <img
+                      src={news.image_url || placeholderImage}
+                      alt={news.title}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                    />
+                  </div>
                   <div className="ml-4 flex-grow">
-                  <Link
-                      to={`/news/${news.id}`}
-                    >
-                    <h3 className="text-sm font-bold mt-2 hover:text-gray-500">{news.title}</h3>
-                  </Link>
+                    <Link to={`/news/${news.id}`}>
+                      <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
+                        {news.title}
+                      </h3>
+                    </Link>
                     <span className="block text-xs text-gray-600 mt-1">
                       {formatDateIndonesian(news.published_at)}
                     </span>
@@ -188,22 +193,22 @@ const HomeContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {latestNews.slice(3, 7).map((news, index) => (
             <div key={index}>
-              <img
-                src={news.image_url || placeholderImage}
-                alt={news.title}
-                className="w-full h-64 object-cover rounded-lg shadow-lg"
-              />
+              <div className="relative overflow-hidden rounded-lg shadow-lg">
+                <img
+                  src={news.image_url || placeholderImage}
+                  alt={news.title}
+                  className="w-full h-64 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110  cursor-pointer"
+                />
+              </div>
               <span className="block text-xs text-gray-600 mt-1">
                 {formatDateIndonesian(news.published_at)}
               </span>
               <div className="mt-2">
-              <Link
-                  to={`/news/${news.id}`}
-                    >
-                <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
-                  {news.title}
-                </h3>
-              </Link>
+                <Link to={`/news/${news.id}`}>
+                  <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
+                    {news.title}
+                  </h3>
+                </Link>
                 <p className="mt-1 text-sm line-clamp-4">
                   {news.description && news.description.length > 150
                     ? news.description.substring(0, 150) + "..."
