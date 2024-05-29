@@ -7,6 +7,12 @@ import Footer from './components/Footer';
 import NewsPage from './pages/NewsPage';
 import AboutUsPage from './pages/AboutUsPage';
 
+// ADMIN
+import MainLayout from './componentsAdmin/MainLayout';
+import AdminDashboard from './pagesAdmin/Dashboad';
+import AdminKategori from './pagesAdmin/Kategori';
+import AdminBerita from './pagesAdmin/Berita';
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -15,6 +21,16 @@ const App = () => {
         <Route path="/category/:categoryName" element={<><Navbar /><CategoryPage /><Footer /></>} />
         <Route path="/news/:id" element={<><Navbar /><NewsPage /><Footer /></>} />
         <Route path="/about-us" element={<><Navbar /><AboutUsPage /><Footer /></>} />
+        <Route path="/admin/*" element={
+          <MainLayout>
+            <Routes>
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="kategori" element={<AdminKategori />} />
+              <Route path="berita" element={<AdminBerita />} />
+              {/* Tambahkan route admin lainnya di sini */}
+            </Routes>
+          </MainLayout>
+        } />
       </Routes>
     </BrowserRouter>
   );
