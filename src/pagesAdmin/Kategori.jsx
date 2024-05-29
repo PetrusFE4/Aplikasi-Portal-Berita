@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Kategori = () => {
   const [categories, setCategories] = useState([]);
@@ -40,21 +41,34 @@ const Kategori = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Function to handle delete action
+  // Function to handle delete action with confirmation
   const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(
-        `https://apiberita.pandekakode.com/api/kategori/${id}`
-      );
-      if (response.data.success) {
-        // Remove the deleted category from the state
-        setCategories(categories.filter((category) => category.id !== id));
-        alert("Category deleted successfully");
+    Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(
+            `https://apiberita.pandekakode.com/api/kategori/${id}`
+          );
+          if (response.data.success) {
+            // Remove the deleted category from the state
+            setCategories(categories.filter((category) => category.id !== id));
+            Swal.fire("Dihapus!", "Kategori telah dihapus.", "success");
+          }
+        } catch (error) {
+          console.error("Error deleting category", error);
+          Swal.fire("Error!", "Gagal menghapus kategori.", "error");
+        }
       }
-    } catch (error) {
-      console.error("Error deleting category", error);
-      alert("Error deleting category");
-    }
+    });
   };
 
   if (loading) {

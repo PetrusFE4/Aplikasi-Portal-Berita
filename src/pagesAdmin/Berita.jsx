@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Berita = () => {
   const [artikels, setArtikels] = useState([]);
@@ -41,18 +42,34 @@ const Berita = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Function to handle delete action with confirmation
   const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(
-        `https://apiberita.pandekakode.com/api/artikels/${id}`
-      );
-      if (response.status === 200) {
-        // Remove the deleted article from the list
-        setArtikels(artikels.filter((artikel) => artikel.id !== id));
+    Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(
+            `https://apiberita.pandekakode.com/api/artikels/${id}`
+          );
+          if (response.status === 200) {
+            // Remove the deleted article from the list
+            setArtikels(artikels.filter((artikel) => artikel.id !== id));
+            Swal.fire("Dihapus!", "Artikel telah dihapus.", "success");
+          }
+        } catch (error) {
+          console.error("Error deleting article: ", error);
+          Swal.fire("Error!", "Gagal menghapus artikel.", "error");
+        }
       }
-    } catch (error) {
-      console.error("Error deleting article: ", error);
-    }
+    });
   };
 
   if (loading) {

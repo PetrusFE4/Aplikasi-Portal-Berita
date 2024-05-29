@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Tambah = () => {
   const [nama, setNama] = useState("");
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-    setSuccess(null);
 
     try {
       const response = await axios.post(
@@ -19,23 +18,34 @@ const Tambah = () => {
         { nama }
       );
       if (response.data.success) {
-        setSuccess(response.data.message);
-        setNama("");
-        navigate("/admin/kategori");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          setNama("");
+          navigate("/admin/kategori");
+        });
       }
     } catch (error) {
+      let errorMessage = "Error adding category";
       if (error.response && error.response.data) {
-        setError(error.response.data.message || "Error adding category");
-      } else {
-        setError("Error adding category");
+        errorMessage = error.response.data.message || errorMessage;
       }
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: errorMessage,
+      });
     }
   };
 
   return (
     <div className="max-w-sm mx-auto mt-8">
-      <h2 className="text-lg font-semibold mb-4">Tambah Kategori</h2>{" "}
-      <span className="text-red-500">*</span>
+      <h2 className="text-lg font-semibold mb-4">Tambah Kategori</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <input
@@ -55,7 +65,6 @@ const Tambah = () => {
           Tambah
         </button>
         {error && <p className="mt-2 text-red-500">{error}</p>}
-        {success && <p className="mt-2 text-green-500">{success}</p>}
       </form>
     </div>
   );

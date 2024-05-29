@@ -1,23 +1,29 @@
 import React, { useState } from "react";
 import {
   FaQrcode,
-  FaAlignLeft,
   FaAlignCenter,
   FaRegNewspaper,
+  FaAlignLeft,
 } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 const NavbarAdmin = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const getNavLinkClass = (path) => {
+    return location.pathname === path
+      ? "flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-200 dark:bg-gray-700"
+      : "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700";
+  };
+
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 h-16">
-        {" "}
-        {/* Menambahkan h-16 untuk tinggi */}
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -57,30 +63,27 @@ const NavbarAdmin = () => {
             <li>
               <a
                 href="/admin/dashboard"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className={getNavLinkClass("/admin/dashboard")}
               >
                 <FaQrcode />
-
                 <span className="ms-3">Dashboard</span>
               </a>
             </li>
             <li>
               <a
                 href="/admin/kategori"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className={getNavLinkClass("/admin/kategori")}
               >
                 <FaAlignCenter />
-
                 <span className="ms-3">Kategori</span>
               </a>
             </li>
             <li>
               <a
                 href="/admin/berita"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className={getNavLinkClass("/admin/berita")}
               >
                 <FaRegNewspaper />
-
                 <span className="ms-3">Berita</span>
               </a>
             </li>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Tambah = () => {
   const navigate = useNavigate();
@@ -57,11 +58,22 @@ const Tambah = () => {
         image_url: null,
         kategori_id: "",
       });
-      alert("Artikel berhasil ditambahkan!");
-      navigate("/admin/berita"); // Redirect to the specified route
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Artikel berhasil ditambahkan!",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        navigate("/admin/berita"); // Redirect to the specified route
+      });
     } catch (error) {
       console.error("Error adding article: ", error);
-      alert("Gagal menambahkan artikel.");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Gagal menambahkan artikel.",
+      });
     }
   };
 
