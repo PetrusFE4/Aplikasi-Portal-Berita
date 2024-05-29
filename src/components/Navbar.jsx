@@ -64,7 +64,11 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="navbar-right">
-          <FaUserCircle className="icon" />
+          <Link to="/login">
+            {" "}
+            <FaUserCircle className="icon" />
+          </Link>
+
           <FaBars className="icon hamburger" onClick={toggleMenu} />
         </div>
       </nav>
