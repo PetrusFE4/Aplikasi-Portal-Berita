@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [loading, setLoading] = useState(true);
@@ -150,13 +151,11 @@ const Login = () => {
                   </button>
                   <p className="text-sm text-center mt-8">
                     Don't have an account
-                    <a
-                      href="#"
-                      onClick={handleRegister}
-                      className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
-                    >
-                      Register here
-                    </a>
+                    <Link to="/register">
+                      <p className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">
+                        Register Here
+                      </p>
+                    </Link>
                   </p>
                 </div>
               </form>
