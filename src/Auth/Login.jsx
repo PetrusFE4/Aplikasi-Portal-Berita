@@ -149,14 +149,14 @@ const Login = () => {
                   >
                     Sign in
                   </button>
-                  <p className="text-sm text-center mt-8">
-                    Don't have an account
+                  <div className="text-sm text-center mt-8">
+                    <span>Don't have an account?</span>
                     <Link to="/register">
-                      <p className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">
+                      <span className="text-blue-600 font-semibold hover:underline ml-1">
                         Register Here
-                      </p>
+                      </span>
                     </Link>
-                  </p>
+                  </div>
                 </div>
               </form>
             </div>
