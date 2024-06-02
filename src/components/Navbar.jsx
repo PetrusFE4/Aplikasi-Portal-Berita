@@ -6,17 +6,26 @@ import "./Navbar.css";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [categories, setCategories] = useState([]);
   const dropdownRef = useRef(null);
+  const userMenuRef = useRef(null);
   const location = useLocation();
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
 
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
+  };
+
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setShowMenu(false);
+    }
+    if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+      setShowUserMenu(false);
     }
   };
 
@@ -64,15 +73,32 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="navbar-right">
-          <Link to="/login">
-            {" "}
-            <FaUserCircle className="icon" />
-          </Link>
-
+          <div className="user-menu" ref={userMenuRef}>
+            <FaUserCircle className="icon" onClick={toggleUserMenu} />
+            <div className={`user-dropdown-menu ${showUserMenu ? "show" : ""}`}>
+              <ul>
+                <li>
+                  <Link to="/login" onClick={() => setShowUserMenu(false)}>
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" onClick={() => setShowUserMenu(false)}>
+                    Register
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/profile" onClick={() => setShowUserMenu(false)}>
+                    Profile
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
           <FaBars className="icon hamburger" onClick={toggleMenu} />
         </div>
       </nav>
-      <hr className="separator " />
+      <hr className="separator" />
       <div className="categories">
         <Link
           to="/"

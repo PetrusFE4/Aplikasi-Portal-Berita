@@ -8,20 +8,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* .navbar-container {
-  width: 100%;
-  background-color: white; 
-  position: relative;
-  z-index: 1000;
-} */
-
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: white; /* Bright navbar color */
-  color: #333; /* Darker text color */
+  background-color: white;
+  color: #333;
 }
 
 .navbar-left,
@@ -44,43 +37,42 @@
   display: flex;
   justify-content: center;
   padding: 10px 0;
-  color: #333; /* Category text color */
+  color: #333;
 }
 
 .category {
-  margin: 0 15px; /* Reduce spacing between categories */
+  margin: 0 15px;
   cursor: pointer;
-  font-weight: bold; /* Bold category text */
+  font-weight: bold;
 }
 
 .separator {
-  width: calc(
-    100% - 40px
-  ); /* Reduce separator width by 20px padding on each side */
-  height: 2px; /* Set line thickness */
-  background-color: black; /* Change line color to black */
-  margin: 10px auto; /* Add 10px margin above and below, and center */
-  border: none; /* Remove border for cleaner look */
+  width: calc(100% - 40px);
+  height: 2px;
+  background-color: black;
+  margin: 10px auto;
+  border: none;
 }
 
 .category-link {
-  text-decoration: none; /* Remove underline from links */
-  color: black; /* Black text color */
-  transition: color 0.3s; /* Transition effect for color change on hover */
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s;
 }
 
 .category-link:hover,
 .dropdown-link:hover {
-  color: #888; /* Gray text color on hover */
+  color: #888;
 }
 
 .category-link.active,
 .dropdown-link.active {
-  color: grey; /* Grey text color when active */
-  font-weight: bold; /* Bold text when active */
+  color: grey;
+  font-weight: bold;
 }
 
-.dropdown-menu {
+.dropdown-menu,
+.user-dropdown-menu {
   position: absolute;
   top: 50px;
   right: 20px;
@@ -89,65 +81,69 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
-  z-index: 2000; /* Ensure dropdown menu is in front of other elements */
-  max-height: 0; /* Initial max-height for transition */
-  opacity: 0; /* Initial opacity for transition */
-  visibility: hidden; /* Initially hidden */
-  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0.3s; /* Smooth transitions */
+  z-index: 2000;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0.3s;
 }
 
-.dropdown-menu.show {
-  max-height: 300px; /* Adjust based on the content height */
+.dropdown-menu.show,
+.user-dropdown-menu.show {
+  max-height: 300px;
   opacity: 1;
   visibility: visible;
 }
 
 .dropdown-link {
-  color: black; /* Black text color */
-  text-decoration: none; /* Remove underline */
+  color: black;
+  text-decoration: none;
 }
 
-.dropdown-menu ul {
+.dropdown-menu ul,
+.user-dropdown-menu ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.dropdown-menu li {
+.dropdown-menu li,
+.user-dropdown-menu li {
   padding: 10px 20px;
   cursor: pointer;
 }
 
-.dropdown-menu li:hover {
+.dropdown-menu li:hover,
+.user-dropdown-menu li:hover {
   background-color: #f0f0f0;
 }
 
 .side-news-item {
-  margin-bottom: 20px; /* Add spacing between side news items */
-  flex-grow: 1; /* Grow side news items */
+  margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 /* Responsive Styles for Mobile */
 @media (max-width: 768px) {
   .dropdown-menu {
-    display: block; /* Display dropdown menu on mobile */
-    color: black; /* Dropdown menu text color */
-    position: fixed; /* Fixed position for dropdown menu */
-    top: 70px; /* Adjust dropdown menu position */
-    right: 0; /* Align dropdown menu to the right */
-    width: 100%; /* Full width dropdown menu */
-    max-height: calc(100vh - 70px); /* Max height for dropdown menu */
-    overflow-y: auto; /* Scroll if dropdown menu is too long */
-    border-top: 1px solid #ccc; /* Add top border */
-    border-radius: 0 0 5px 5px; /* Round bottom corners */
+    display: block;
+    color: black;
+    position: fixed;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-top: 1px solid #ccc;
+    border-radius: 0 0 5px 5px;
   }
 
   .categories {
-    display: none; /* Hide categories on mobile */
+    display: none;
   }
 
   .side-news-item {
-    margin-bottom: 10px; /* Reduce spacing between side news items on mobile */
-    width: 100%; /* Full width for side news items on mobile */
+    margin-bottom: 10px;
+    width: 100%;
   }
 }

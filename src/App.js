@@ -1,11 +1,12 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomeContent from "./pages/HomeContent";
 import CategoryPage from "./pages/CategoryPage";
 import Footer from "./components/Footer";
 import NewsPage from "./pages/NewsPage";
 import AboutUsPage from "./pages/AboutUsPage";
+import Profile from "./pages/ProfilePage";
 
 // AUTH
 import Login from "./Auth/Login";
@@ -65,6 +66,17 @@ const App = () => {
             <>
               <Navbar />
               <AboutUsPage />
+              <Footer />
+            </>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Navbar />
+              <Profile />
               <Footer />
             </>
           }
