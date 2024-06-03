@@ -8,8 +8,9 @@ const NewsPage = () => {
   const { id } = useParams();
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [comments] = useState([]); // State untuk menyimpan komentar
+  const [comments, setComments] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
+  const [commentContent, setCommentContent] = useState("");
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -27,7 +28,14 @@ const NewsPage = () => {
     };
 
     const fetchComments = async () => {
-      // Implementasi pengambilan data komentar dari API
+      try {
+        const response = await axios.get(
+          `https://apiberita.pandekakode.com/api/comments/${id}`
+        );
+        setComments(response.data.data);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
     };
 
     const fetchLatestNews = async () => {
@@ -45,6 +53,28 @@ const NewsPage = () => {
     fetchComments();
     fetchLatestNews();
   }, [id]);
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (commentContent.trim() === "") {
+      alert("Komentar tidak boleh kosong!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://apiberita.pandekakode.com/api/comments`,
+        {
+          article_id: id,
+          content: commentContent,
+        }
+      );
+      setComments([...comments, response.data.data]);
+      setCommentContent("");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  };
 
   const formatDateIndonesian = (dateString) => {
     const date = new Date(dateString);
@@ -165,11 +195,21 @@ const NewsPage = () => {
                 </li>
               ))}
             </ul>
-            <textarea
-              className="w-full p-2 border rounded mt-4"
-              rows="4"
-              placeholder="Tulis komentar anda..."
-            ></textarea>
+            <form onSubmit={handleCommentSubmit}>
+              <textarea
+                className="w-full p-2 border rounded mt-4"
+                rows="4"
+                placeholder="Tulis komentar anda..."
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+              ></textarea>
+              <button
+                type="submit"
+                className="mt-2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+              >
+                Submit
+              </button>
+            </form>
           </div>
         </div>
         <div className="md:col-span-1">

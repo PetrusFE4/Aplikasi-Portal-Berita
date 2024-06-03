@@ -71,7 +71,23 @@
   font-weight: bold;
 }
 
-.dropdown-menu,
+.dropdown-menu {
+  position: fixed;
+  top: 70px; /* Adjust based on your design */
+  left: 20px; /* Adjust to position it on the left */
+  background-color: white;
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 2000;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+}
+
+
 .user-dropdown-menu {
   position: absolute;
   top: 50px;

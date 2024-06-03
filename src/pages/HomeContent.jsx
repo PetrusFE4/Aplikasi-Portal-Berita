@@ -63,17 +63,11 @@ const HomeContent = () => {
                 {formatDateIndonesian(mainNews.published_at)}
               </span>
               <Link to={`/news/${mainNews.id}`}>
-                <h2 className="text-xl font-bold mt-2 hover:text-gray-500">
+                <h2 className="text-2xl font-bold mt-2 hover:text-gray-500">
                   {mainNews.title}
                 </h2>
               </Link>
 
-              <Link
-                to={`/news/${mainNews.id}`}
-                className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
-              >
-                Read More
-              </Link>
             </div>
           )}
 
@@ -94,12 +88,6 @@ const HomeContent = () => {
                   <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
                     {news.title}
                   </h3>
-                </Link>
-                <Link
-                  to={`/news/${news.id}`}
-                  className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
-                >
-                  Read More
                 </Link>
               </div>
             ))}

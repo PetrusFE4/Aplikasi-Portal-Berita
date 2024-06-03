@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { FaSearch, FaUserCircle, FaBars } from "react-icons/fa";
+import { FaUserCircle, FaBars } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
@@ -65,7 +65,7 @@ const Navbar = () => {
     <div className="navbar-container">
       <nav className="navbar">
         <div className="navbar-left">
-          <FaSearch className="icon" />
+          <FaBars className="icon hamburger" onClick={toggleMenu} />
         </div>
         <div className="navbar-center">
           <Link to="/" className="logo-link">
@@ -95,7 +95,6 @@ const Navbar = () => {
               </ul>
             </div>
           </div>
-          <FaBars className="icon hamburger" onClick={toggleMenu} />
         </div>
       </nav>
       <hr className="separator" />

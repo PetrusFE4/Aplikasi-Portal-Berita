@@ -44,7 +44,7 @@ const Register = () => {
               </div>
               <form className="max-w-md w-full mx-auto" onSubmit={handleRegister}>
                 <div className="mb-12">
-                  <h3 className="text-4xl font-extrabold text-blue-600">
+                  <h3 className="text-4xl font-extrabold text-gray-600">
                     Register
                   </h3>
                 </div>
@@ -54,7 +54,7 @@ const Register = () => {
                       name="username"
                       type="text"
                       required
-                      className="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                      className="w-full text-sm border-b border-gray-300 focus:border-gray-600 px-2 py-3 outline-none"
                       placeholder="Enter username"
                     />
                     <svg
@@ -77,7 +77,7 @@ const Register = () => {
                       name="email"
                       type="email"
                       required
-                      className="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                      className="w-full text-sm border-b border-gray-300 focus:border-gray-600 px-2 py-3 outline-none"
                       placeholder="Enter email"
                     />
                     <svg
@@ -120,7 +120,7 @@ const Register = () => {
                       name="password"
                       type="password"
                       required
-                      className="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                      className="w-full text-sm border-b border-gray-300 focus:border-gray-600 px-2 py-3 outline-none"
                       placeholder="Enter password"
                     />
                     <svg
@@ -144,7 +144,7 @@ const Register = () => {
                       name="terms"
                       type="checkbox"
                       required
-                      className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 shrink-0 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
                     />
                     <label htmlFor="terms" className="ml-3 block text-sm">
                       I agree to the terms and conditions
@@ -154,15 +154,15 @@ const Register = () => {
                 <div className="mt-12">
                   <button
                     type="submit"
-                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-gray-600 hover:bg-gray-700 focus:outline-none"
                   >
                     Register
                   </button>
                   <div className="text-sm text-center mt-8">
                     <span>Already have an account?</span>
                     <Link to="/login">
-                      <span className="text-blue-600 font-semibold hover:underline ml-1">
-                        Sign in here
+                      <span className="text-gray-600 font-semibold hover:underline ml-1">
+                        Login here
                       </span>
                     </Link>
                   </div>
