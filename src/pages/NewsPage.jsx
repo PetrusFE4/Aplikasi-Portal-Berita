@@ -173,12 +173,14 @@ const NewsPage = () => {
             <IoShareSocial className="text-lg text-gray-500 cursor-pointer hover:text-black" />
             <FaBookmark className="text-lg text-gray-500 cursor-pointer hover:text-black" />
           </div>
-          <img
-            src={news.image_url}
-            alt="Cover"
-            className="w-full h-96 md:w-full object-cover rounded-lg"
-            style={{ aspectRatio: "16/10" }}
-          />
+          <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+            <img
+              src={news.image_url}
+              alt="Cover"
+              className="w-full h-96 md:w-full object-cover rounded-lg  transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+              style={{ aspectRatio: "16/10" }}
+            />
+          </div>
           <p className="text-sm text-gray-500 mt-2">
             {formatDateIndonesian(news.published_at)}
           </p>
@@ -227,11 +229,13 @@ const NewsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {latestNews.slice(3, 7).map((newsItem, index) => (
             <div key={index}>
-              <img
-                src={newsItem.image_url}
-                alt={newsItem.title}
-                className="w-full md:w-11/12 h-64 object-cover rounded-lg shadow-lg"
-              />
+              <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                <img
+                  src={newsItem.image_url}
+                  alt={newsItem.title}
+                  className="w-full md:w-11/12 h-40 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                />
+              </div>
               <span className="block text-xs text-gray-600 mt-1">
                 {formatDateIndonesian(newsItem.published_at)}
               </span>

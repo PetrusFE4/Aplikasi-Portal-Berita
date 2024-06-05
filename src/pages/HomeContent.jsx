@@ -67,7 +67,6 @@ const HomeContent = () => {
                   {mainNews.title}
                 </h2>
               </Link>
-
             </div>
           )}
 

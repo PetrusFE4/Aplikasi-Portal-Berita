@@ -77,11 +77,13 @@ const CategoryPage = () => {
           <div className="md:col-span-1 space-y-4">
             {articles.slice(0, 2).map((article) => (
               <div key={article.id} className="p-4">
-                <img
-                  src={article.image_url || "https://via.placeholder.com/150"}
-                  alt={article.title}
-                  className="w-full h-40 object-cover mb-4 rounded-lg shadow-2xl"
-                />
+                <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                  <img
+                    src={article.image_url || "https://via.placeholder.com/150"}
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer "
+                  />
+                </div>
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
@@ -106,13 +108,15 @@ const CategoryPage = () => {
           <div className="md:col-span-2 md:row-span-2 p-4">
             {articles[2] && (
               <>
-                <img
-                  src={
-                    articles[2].image_url || "https://via.placeholder.com/150"
-                  }
-                  alt={articles[2].title}
-                  className="w-full h-80 object-cover mb-4 rounded-lg shadow-2xl"
-                />
+                <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                  <img
+                    src={
+                      articles[2].image_url || "https://via.placeholder.com/150"
+                    }
+                    alt={articles[2].title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                  />
+                </div>
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(articles[2].published_at)}
                 </p>
@@ -137,11 +141,13 @@ const CategoryPage = () => {
           <div className="md:col-span-1 space-y-4">
             {articles.slice(3, 5).map((article) => (
               <div key={article.id} className="p-4">
-                <img
-                  src={article.image_url || "https://via.placeholder.com/150"}
-                  alt={article.title}
-                  className="w-full h-40 object-cover mb-4 rounded-lg shadow-2xl"
-                />
+                <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                  <img
+                    src={article.image_url || "https://via.placeholder.com/150"}
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                  />
+                </div>
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
@@ -166,19 +172,21 @@ const CategoryPage = () => {
       )}
 
       {!loading && <hr className="mt-8 border border-black" />}
-
+      {/* BERITA TERBARU */}
       {!loading && (
         <div className="mt-1">
           <h2 className="text-2xl font-bold mb-8">Berita Terbaru</h2>
           <div className="grid grid-cols-1 gap-4">
             {latestNews.map((news, index) => (
-              <div className="flex mb-4" key={index}>
-                <img
-                  src={news.image_url || "https://via.placeholder.com/150"}
-                  alt={news.title}
-                  className="w-48 object-cover flex-shrink-0 rounded-lg shadow-lg"
-                />
-                <div className="ml-4 flex-grow">
+              <div className="flex flex-col md:flex-row mb-4" key={index}>
+                <div className="relative overflow-hidden rounded-lg shadow-lg w-full md:w-48">
+                  <img
+                    src={news.image_url || "https://via.placeholder.com/150"}
+                    alt={news.title}
+                    className="w-full h-48 md:h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+                  />
+                </div>
+                <div className="mt-4 md:mt-0 md:ml-4 flex-grow">
                   <Link to={`/news/${news.id}`}>
                     <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
                       {news.title}
