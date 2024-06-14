@@ -20,3 +20,12 @@ curl -X POST http://localhost:5050/auth/signup \
   "role": "admin"
 }'
 ```
+
+```
+curl -X POST http://localhost:5050/auth/signin \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "sundew@admin.com",
+  "password": "admin123"
+}'
+```
