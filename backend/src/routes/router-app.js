@@ -13,6 +13,7 @@ const favoriteController = require('../controllers/favoriteController');
 const commentController = require('../controllers/commentController');
 const categoryController = require('../controllers/categoryController');
 const { uploadFile } = require('../controllers/controller-upload');
+const gantiPasswordController = require('../controllers/gantiPasswordController'); // Sesuaikan path dan nama file dengan struktur direktori Anda
 
 
 router.post('/auth/signup', authController.signup);
@@ -46,7 +47,13 @@ router.get('/comments/:newsId', commentController.getCommentsByNewsId);
 router.post('/comments/add', jwtAuth.verifyToken, commentController.addComment); 
 router.delete('/comments/:id', jwtAuth.verifyToken, commentController.deleteComment); 
 
+router.get('/files', jwtAuth.verifyToken, uploadFile);
 router.post('/upload', jwtAuth.verifyToken, uploadFile);
+router.put('/files/:fileName', jwtAuth.verifyToken, uploadFile);
+router.delete('/files/:fileName', jwtAuth.verifyToken,uploadFile);
+
+router.put('/change-password', jwtAuth.verifyToken, gantiPasswordController.changePassword);
+
 
 
 module.exports = router;
