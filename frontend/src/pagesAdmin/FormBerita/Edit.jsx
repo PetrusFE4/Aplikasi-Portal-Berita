@@ -1,20 +1,61 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Tambah = () => {
-  const navigate = useNavigate();
-
+const Edit = () => {
+  const { id } = useParams(); // Ambil ID berita dari URL
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     content: "",
-    image: "", // Changed to string type for image URL
-    id_category: "", // Initial state for category ID
+    image: "",
+    id_category: "",
+    id_user: "",
+    published_at: "",
   });
+  const [loading, setLoading] = useState(true); // State untuk loading
+  const navigate = useNavigate();
 
-  const [categories, setCategories] = useState([]);
+  // Ambil token dari sessionStorage
+  const token = sessionStorage.getItem("token") || "";
+  console.log("Token: ", token);
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        console.log(`Fetching data for ID: ${id}`);
+        const response = await axios.get(`http://localhost:5050/news/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Fetched article data:", response.data);
+
+        const { title, description, content, image, id_category, id_user, published_at } = response.data;
+        setFormData({
+          title,
+          description,
+          content,
+          image,
+          id_category: id_category.toString(), // Pastikan id_category berupa string
+          id_user: id_user.toString(), // Pastikan id_user berupa string
+          published_at, // Pastikan published_at dalam format yang benar
+        });
+        setLoading(false); // Set loading ke false setelah data diambil
+      } catch (error) {
+        console.error("Error fetching article: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to fetch article data.",
+        });
+        setLoading(false); // Set loading ke false jika terjadi error
+      }
+    };
+
+    fetchArticle();
+  }, [id, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,60 +69,38 @@ const Tambah = () => {
     e.preventDefault();
 
     try {
-      const token = sessionStorage.getItem("token") || ""; // Get token from sessionStorage
-      const response = await axios.post(
-        "http://localhost:5050/news",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data);
-      setFormData({
-        title: "",
-        description: "",
-        content: "",
-        image: "", // Reset image URL after successful submission
-        id_category: "", // Reset category ID after successful submission
+      console.log("Submitting form data: ", formData);
+      const response = await axios.put(`http://localhost:5050/news/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      console.log("Update response:", response.data);
       Swal.fire({
         icon: "success",
-        title: "Berhasil",
-        text: "Artikel berhasil ditambahkan!",
+        title: "Success",
+        text: "Article updated successfully!",
         showConfirmButton: false,
         timer: 1500,
-      }).then(() => {
-        navigate("/admin/berita"); // Redirect to the specified route
       });
+      navigate("/admin/berita");
     } catch (error) {
-      console.error("Error adding article: ", error);
+      console.error("Error updating article: ", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal",
-        text: "Gagal menambahkan artikel.",
+        title: "Error",
+        text: "Failed to update article.",
       });
     }
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5050/categories"
-        );
-        setCategories(response.data); // Set categories state with data
-      } catch (error) {
-        console.error("Error fetching categories: ", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  if (loading) {
+    return <div>Loading...</div>; // Tampilan loading
+  }
 
   return (
     <div className="max-w-xl mx-auto mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Tambah Artikel</h2>
+      <h2 className="text-2xl font-semibold mb-4">Edit Article</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block">Title:</label>{" "}
@@ -131,32 +150,26 @@ const Tambah = () => {
           />
         </div>
         <div>
-          <label className="block">Kategori:</label>{" "}
+          <label className="block">Category:</label>{" "}
           <span className="text-red-500">*</span>
-          <select
+          <input
+            type="text"
             name="id_category"
             value={formData.id_category}
             onChange={handleChange}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-          >
-            <option value="">Pilih Kategori</option>
-            {categories.map((category) => (
-              <option key={category.id_category} value={category.id_category}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          />
         </div>
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
-          Tambah Artikel
+          Update Article
         </button>
       </form>
     </div>
   );
 };
 
-export default Tambah;
+export default Edit;

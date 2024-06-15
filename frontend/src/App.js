@@ -7,22 +7,28 @@ import Footer from "./components/Footer";
 import NewsPage from "./pages/NewsPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import Profile from "./pages/ProfilePage";
+import ChangePassword from "./pages/ChangePassword";
+
 
 // AUTH
 import Login from "./Auth/Login";
+import Register from "./Auth/Register";
 // AUTH
 
 // ADMIN
 import MainLayout from "./componentsAdmin/MainLayout";
+import ProtectedRoute from "./componentsAdmin/ProtectedRoute";
 import AdminDashboard from "./pagesAdmin/Dashboad";
 import AdminKategori from "./pagesAdmin/Kategori";
 import AdminBerita from "./pagesAdmin/Berita";
+import Users from "./pagesAdmin/Users";
+
 // ADMIN
 
 // ADMIN FORM
 import KategoriTambah from "./pagesAdmin/FormKategori/Tambah";
 import BeritaTambah from "./pagesAdmin/FormBerita/Tambah";
-import Register from "./Auth/Register";
+import BeritaEdit from "./pagesAdmin/FormBerita/Edit";
 // ADMIN FORM
 
 const App = () => {
@@ -59,7 +65,6 @@ const App = () => {
             </>
           }
         />
-
         <Route
           path="/about-us"
           element={
@@ -70,7 +75,6 @@ const App = () => {
             </>
           }
         />
-
         <Route
           path="/profile"
           element={
@@ -81,7 +85,6 @@ const App = () => {
             </>
           }
         />
-        {/* AUTH */}
         <Route
           path="/login"
           element={
@@ -91,7 +94,6 @@ const App = () => {
             </>
           }
         />
-        {/* AUTH */}
         <Route
           path="/register"
           element={
@@ -101,30 +103,37 @@ const App = () => {
             </>
           }
         />
-        {/* AUTH */}
-
-        {/* ADMIN */}
+         <Route
+          path="/changepassword"
+          element={
+            <>
+              <Navbar />
+              <ChangePassword />
+              <Footer />
+            </>
+          }
+        />
         <Route
           path="/admin/*"
           element={
-            <MainLayout>
-              <Routes>
-                <Route path="dashboard" element={<AdminDashboard />} />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <MainLayout>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="kategori" element={<AdminKategori />} />
+                  <Route path="kategori/tambah" element={<KategoriTambah />} />
+                  <Route path="berita" element={<AdminBerita />} />
+                  <Route path="berita/tambah" element={<BeritaTambah />} />
+                  <Route path="berita/edit" element={<BeritaEdit />} />
 
-                {/* KATEGORI */}
-                <Route path="kategori" element={<AdminKategori />} />
-                <Route path="kategori/tambah" element={<KategoriTambah />} />
-                {/* KATEGORI */}
+                  <Route path="users" element={<Users />} />
 
-                {/* BERITA */}
-                <Route path="berita" element={<AdminBerita />} />
-                <Route path="berita/tambah" element={<BeritaTambah />} />
-                {/* BERITA */}
-              </Routes>
-            </MainLayout>
+
+                </Routes>
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
-        {/* ADMIN */}
       </Routes>
     </BrowserRouter>
   );

@@ -1,16 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { FaUserCircle, FaBars } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef(null);
   const userMenuRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in by checking if a token exists in sessionStorage
+    const token = sessionStorage.getItem("token");
+    setIsLoggedIn(!!token); // Convert token to a boolean
+  }, []);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -18,6 +26,15 @@ const Navbar = () => {
 
   const toggleUserMenu = () => {
     setShowUserMenu(!showUserMenu);
+  };
+
+  const handleLogout = () => {
+    // Clear sessionStorage
+    sessionStorage.clear();
+    setIsLoggedIn(false);
+    setShowUserMenu(false);
+    // Redirect to login page
+    navigate("/login");
   };
 
   const handleClickOutside = (event) => {
@@ -43,14 +60,28 @@ const Navbar = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/artikels"
+        // Fetch articles to get the category IDs
+        const articlesResponse = await axios.get(
+          "http://localhost:5050/news"
         );
 
-        // Extract categories and remove duplicates
-        const uniqueCategories = [
-          ...new Set(response.data.data.map((article) => article.categories)),
+        // Extract unique category IDs from the articles
+        const uniqueCategoryIds = [
+          ...new Set(articlesResponse.data.map((article) => article.id_category)),
         ];
+
+        // Fetch categories to get category names
+        const categoriesResponse = await axios.get(
+          "http://localhost:5050/categories"
+        );
+
+        // Filter and map categories to get only those that are used in articles
+        const uniqueCategories = categoriesResponse.data
+          .filter(category => uniqueCategoryIds.includes(category.id_category))
+          .map(category => ({
+            id: category.id_category,
+            name: category.name,
+          }));
 
         setCategories(uniqueCategories);
       } catch (error) {
@@ -77,21 +108,33 @@ const Navbar = () => {
             <FaUserCircle className="icon" onClick={toggleUserMenu} />
             <div className={`user-dropdown-menu ${showUserMenu ? "show" : ""}`}>
               <ul>
-                <li>
-                  <Link to="/login" onClick={() => setShowUserMenu(false)}>
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/register" onClick={() => setShowUserMenu(false)}>
-                    Register
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" onClick={() => setShowUserMenu(false)}>
-                    Profile
-                  </Link>
-                </li>
+                {!isLoggedIn ? (
+                  <>
+                    <li>
+                      <Link to="/login" onClick={() => setShowUserMenu(false)}>
+                        Login
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/register" onClick={() => setShowUserMenu(false)}>
+                        Register
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <Link to="/profile" onClick={() => setShowUserMenu(false)}>
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>
@@ -107,18 +150,17 @@ const Navbar = () => {
         >
           <div className="category">Home</div>
         </Link>
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <Link
-            to={`/category/${category}`}
-            key={index}
+            to={`/category/${category.id}`}
+            key={category.id}
             className={`category-link ${
-              location.pathname === `/category/${category}` ? "active" : ""
+              location.pathname === `/category/${category.id}` ? "active" : ""
             }`}
           >
-            <div className="category">{category}</div>
+            <div className="category">{category.name}</div>
           </Link>
         ))}
-        {/* Tambahkan link ke AboutUsPage */}
         <Link to="/about-us" className="category-link">
           <div className="category">Tentang Kami</div>
         </Link>
@@ -139,16 +181,16 @@ const Navbar = () => {
               Home
             </Link>
           </li>
-          {categories.map((category, index) => (
-            <li key={index}>
+          {categories.map((category) => (
+            <li key={category.id}>
               <Link
-                to={`/category/${category}`}
+                to={`/category/${category.id}`}
                 className={`dropdown-link ${
-                  location.pathname === `/category/${category}` ? "active" : ""
+                  location.pathname === `/category/${category.id}` ? "active" : ""
                 }`}
                 onClick={handleCategoryClick}
               >
-                {category}
+                {category.name}
               </Link>
             </li>
           ))}

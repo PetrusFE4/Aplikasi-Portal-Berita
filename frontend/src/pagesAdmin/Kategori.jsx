@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Kategori = () => {
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [editCategory, setEditCategory] = useState(null);
+  const [editNama, setEditNama] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/kategori"
-        );
+        const response = await axios.get("http://localhost:5050/categories");
         console.log("API Response:", response.data);
-        const sortedCategories = response.data.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setCategories(sortedCategories);
+
+        if (response.data && Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          setError(new Error("Data format is incorrect"));
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching the data", error);
@@ -41,9 +45,11 @@ const Kategori = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Function to handle delete action with confirmation
   const handleDelete = async (id) => {
-    Swal.fire({
+    const token = sessionStorage.getItem("token");
+  
+    // Menampilkan dialog konfirmasi dengan SweetAlert
+    const result = await Swal.fire({
       title: "Apakah Anda yakin?",
       text: "Anda tidak akan dapat mengembalikan ini!",
       icon: "warning",
@@ -52,23 +58,79 @@ const Kategori = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Ya, hapus!",
       cancelButtonText: "Batal",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.delete(
-            `https://apiberita.pandekakode.com/api/kategori/${id}`
-          );
-          if (response.data.success) {
-            // Remove the deleted category from the state
-            setCategories(categories.filter((category) => category.id !== id));
-            Swal.fire("Dihapus!", "Kategori telah dihapus.", "success");
-          }
-        } catch (error) {
-          console.error("Error deleting category", error);
-          Swal.fire("Error!", "Gagal menghapus kategori.", "error");
-        }
-      }
     });
+  
+    // Jika pengguna mengonfirmasi penghapusan
+    if (result.isConfirmed) {
+      try {
+        // Melakukan HTTP request DELETE menggunakan axios
+        const response = await axios.delete(`http://localhost:5050/categories/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Jika penghapusan berhasil (status response 200)
+        if (response.status === 200) {
+          // Mengupdate state categories dengan menghapus kategori yang dihapus
+          setCategories(categories.filter((category) => category.id_category !== id));
+  
+          // Menampilkan pesan sukses dengan SweetAlert
+          Swal.fire("Dihapus!", "Kategori telah dihapus.", "success");
+        }
+      } catch (error) {
+        // Menampilkan pesan error dengan SweetAlert jika terjadi kesalahan saat menghapus
+        Swal.fire("Error!", "Gagal menghapus kategori.", "error");
+      }
+    }
+  };
+  
+
+
+  // Function to handle edit action
+  const handleEdit = (category) => {
+    setEditCategory(category);
+    setEditNama(category.name); // Set nama kategori yang akan diubah
+  };
+
+  // Function to update category
+  const updateCategory = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:5050/categories/${editCategory.id_category}`,
+        { name: editNama },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      if (response.data.success) {
+        // Update category in the state
+        const updatedCategories = categories.map((category) =>
+          category.id_category === editCategory.id_category ? { ...category, name: editNama } : category
+        );
+        setCategories(updatedCategories);
+        setEditCategory(null);
+        setEditNama("");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: response.data.message,
+          timer: 1500,
+        }).then(() => {
+          navigate("/admin/kategori"); // Redirect to the specified route
+        });
+      }
+    } catch (error) {
+      console.error("Error updating category", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Gagal memperbarui kategori.",
+      });
+    }
   };
 
   if (loading) {
@@ -123,31 +185,65 @@ const Kategori = () => {
               </thead>
               <tbody>
                 {currentCategories.map((category, index) => (
-                  <tr key={category.id}>
+                  <tr key={category.id_category}>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        {category.nama}
-                      </p>
+                      {editCategory && editCategory.id_category === category.id_category ? (
+                        <input
+                          type="text"
+                          value={editNama}
+                          onChange={(e) => setEditNama(e.target.value)}
+                          className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                        />
+                      ) : (
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          {category.name}
+                        </p>
+                      )}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm flex space-x-2">
-                      <button
+                      {editCategory && editCategory.id_category === category.id_category ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={updateCategory}
+                            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-green-800"
+                          >
+                            Simpan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditCategory(null);
+                              setEditNama("");
+                            }}
+                            className="text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-gray-800"
+                          >
+                            Batal
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEdit(category)}
+                            className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-blue-800"
+                          >
+                            Edit
+                          </button>
+                          <button
+                        onClick={() => handleDelete(category.id_category)}
                         type="button"
-                        className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-blue-800"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(category.id)}
                         className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-red-800"
                       >
                         Delete
                       </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -238,3 +334,4 @@ const Kategori = () => {
 };
 
 export default Kategori;
+

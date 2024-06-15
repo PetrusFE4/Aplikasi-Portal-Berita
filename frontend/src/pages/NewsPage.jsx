@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { IoShareSocial } from "react-icons/io5";
-import { FaBookmark } from "react-icons/fa6";
+import { BiSolidBookmarkAltPlus, BiSolidBookmarkMinus } from "react-icons/bi";
 
 const NewsPage = () => {
   const { id } = useParams();
@@ -11,15 +11,14 @@ const NewsPage = () => {
   const [comments, setComments] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
   const [commentContent, setCommentContent] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://apiberita.pandekakode.com/api/artikels/${id}`
-        );
-        setNews(response.data.data);
+        const response = await axios.get(`http://localhost:5050/news/${id}`);
+        setNews(response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching the news:", error);
@@ -28,11 +27,26 @@ const NewsPage = () => {
     };
 
     const fetchComments = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+
       try {
-        const response = await axios.get(
-          `https://apiberita.pandekakode.com/api/comments/${id}`
+        const response = await axios.get(`http://localhost:5050/comments/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const commentsWithUser = await Promise.all(
+          response.data.map(async (comment) => {
+            const userResponse = await axios.get(`http://localhost:5050/users/${comment.id_user}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            return { ...comment, user: userResponse.data.name };
+          })
         );
-        setComments(response.data.data);
+        setComments(commentsWithUser);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -40,18 +54,35 @@ const NewsPage = () => {
 
     const fetchLatestNews = async () => {
       try {
-        const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/artikels"
-        );
-        setLatestNews(response.data.data);
+        const response = await axios.get("http://localhost:5050/news/");
+        setLatestNews(response.data);
       } catch (error) {
         console.error("Error fetching latest news:", error);
+      }
+    };
+
+    const checkFavoriteStatus = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await axios.get("http://localhost:5050/favorites", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const favoriteNews = response.data;
+        const isFavorite = favoriteNews.some((item) => item.id_news === parseInt(id));
+        setIsFavorite(isFavorite);
+      } catch (error) {
+        console.error("Error checking favorite status:", error);
       }
     };
 
     fetchNews();
     fetchComments();
     fetchLatestNews();
+    checkFavoriteStatus();
   }, [id]);
 
   const handleCommentSubmit = async (e) => {
@@ -61,18 +92,70 @@ const NewsPage = () => {
       return;
     }
 
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Anda harus login terlebih dahulu untuk mengirim komentar.");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        `https://apiberita.pandekakode.com/api/comments`,
+        `http://localhost:5050/comments/add`,
         {
-          article_id: id,
-          content: commentContent,
+          id_news: id,
+          comment: commentContent,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      setComments([...comments, response.data.data]);
-      setCommentContent("");
+      alert("Komentar berhasil dikirim!");
+      window.location.reload();  // Reload halaman setelah submit komentar
     } catch (error) {
       console.error("Error submitting comment:", error);
+    }
+  };
+
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Berita sudah disalin, bagikan ke rekan anda!");
+    });
+  };
+
+  const handleBookmark = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Anda harus login terlebih dahulu untuk menandai berita sebagai favorit.");
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await axios.delete(`http://localhost:5050/news/favorite/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        alert("Berita berhasil dihapus dari favorit!");
+      } else {
+        await axios.post(
+          "http://localhost:5050/news/favorite",
+          { newsId: id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert("Berita berhasil ditandai sebagai favorit!");
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error bookmarking the news:", error);
+      alert("Terjadi kesalahan saat mengelola favorit.");
     }
   };
 
@@ -106,7 +189,6 @@ const NewsPage = () => {
                   <Link
                     to="/"
                     className="inline-flex items-center text-sm font-medium text-black hover:text-gray-600"
-                    onClick={() => (window.location.href = "/")}
                   >
                     <svg
                       className="w-3 h-3 me-2.5"
@@ -169,15 +251,29 @@ const NewsPage = () => {
             {/* BREADCRUMB */}
           </div>
           <h2 className="text-2xl font-bold mt-1 mb-2">{news.title}</h2>
-          <div className="flex gap-2 mt-3 mb-3">
-            <IoShareSocial className="text-lg text-gray-500 cursor-pointer hover:text-black" />
-            <FaBookmark className="text-lg text-gray-500 cursor-pointer hover:text-black" />
+          <div className="flex gap-9 mt-3 mb-3">
+            <IoShareSocial
+              className="text-2xl text-blue-500 cursor-pointer hover:text-green-700"
+              onClick={handleShare}
+            />
+            {isFavorite ? (
+              <BiSolidBookmarkMinus
+                className="text-2xl text-red-500 cursor-pointer hover:text-red-700"
+                onClick={handleBookmark}
+              />
+            ) : (
+              <BiSolidBookmarkAltPlus
+                className="text-2xl text-green-500 cursor-pointer hover:text-green-700"
+                onClick={handleBookmark}
+              />
+            )}
           </div>
+
           <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
             <img
-              src={news.image_url}
+              src={news.image}
               alt="Cover"
-              className="w-full h-96 md:w-full object-cover rounded-lg  transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+              className="w-full h-96 md:w-full object-cover rounded-lg transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
               style={{ aspectRatio: "16/10" }}
             />
           </div>
@@ -192,8 +288,10 @@ const NewsPage = () => {
             <h3 className="text-lg font-semibold">Komentar</h3>
             <ul className="mt-4">
               {comments.map((comment) => (
-                <li key={comment.id} className="mb-2">
-                  {comment.content}
+                <li key={comment.id_comment} className="mb-2">
+                  <p className="font-semibold">{comment.user}</p>
+                  <p className="text-sm text-gray-500">{formatDateIndonesian(comment.created_at)}</p>
+                  <p>{comment.comment}</p>
                 </li>
               ))}
             </ul>
@@ -231,7 +329,7 @@ const NewsPage = () => {
             <div key={index}>
               <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
                 <img
-                  src={newsItem.image_url}
+                  src={newsItem.image}
                   alt={newsItem.title}
                   className="w-full md:w-11/12 h-40 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
                 />
@@ -240,7 +338,7 @@ const NewsPage = () => {
                 {formatDateIndonesian(newsItem.published_at)}
               </span>
               <div className="mt-2">
-                <Link to={`/news/${newsItem.id}`}>
+                <Link to={`/news/${newsItem.id_news}`}>
                   <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
                     {newsItem.title}
                   </h3>

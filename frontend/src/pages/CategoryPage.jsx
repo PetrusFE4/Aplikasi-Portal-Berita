@@ -7,18 +7,34 @@ const CategoryPage = () => {
   const [articles, setArticles] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categoryDisplayName, setCategoryDisplayName] = useState("");
 
   useEffect(() => {
+    const fetchCategoryDetails = async () => {
+      try {
+        const categoriesResponse = await axios.get("http://localhost:5050/categories");
+        const category = categoriesResponse.data.find(cat => cat.id_category.toString() === categoryName);
+        if (category) {
+          setCategoryDisplayName(category.name);
+        } else {
+          setCategoryDisplayName("");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategoryDisplayName("");
+      }
+    };
+
     const fetchCategoryData = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/artikels"
+          `http://localhost:5050/news/category/${categoryName}`
         );
 
-        const categoryArticles = response.data.data
-          .filter((article) => article.categories.includes(categoryName))
-          .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+        const categoryArticles = response.data.sort(
+          (a, b) => new Date(b.published_at) - new Date(a.published_at)
+        );
 
         setArticles(categoryArticles);
         setLoading(false);
@@ -31,9 +47,9 @@ const CategoryPage = () => {
     const fetchLatestNews = async () => {
       try {
         const response = await axios.get(
-          "https://apiberita.pandekakode.com/api/artikels"
+          "http://localhost:5050/news"
         );
-        const sortedNews = response.data.data.sort(
+        const sortedNews = response.data.sort(
           (a, b) => new Date(b.published_at) - new Date(a.published_at)
         );
         setLatestNews(sortedNews.slice(0, 10));
@@ -42,8 +58,13 @@ const CategoryPage = () => {
       }
     };
 
-    fetchCategoryData();
-    fetchLatestNews();
+    const initializePage = async () => {
+      await fetchCategoryDetails();
+      await fetchCategoryData();
+      fetchLatestNews();
+    };
+
+    initializePage();
   }, [categoryName]);
 
   const formatDateIndonesian = (dateString) => {
@@ -63,7 +84,7 @@ const CategoryPage = () => {
   return (
     <div className="mx-auto max-w-screen-lg p-4 mt-20 md:mt-36">
       <h1 className="text-2xl font-bold mb-8">
-        Berita {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
+        Berita {categoryDisplayName}
       </h1>
 
       {loading ? (
@@ -76,18 +97,18 @@ const CategoryPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-1 space-y-4">
             {articles.slice(0, 2).map((article) => (
-              <div key={article.id} className="p-4">
+              <div key={article.id_news} className="p-4">
                 <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
                   <img
-                    src={article.image_url || "https://via.placeholder.com/150"}
+                    src={article.image || "https://via.placeholder.com/150"}
                     alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer "
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
                   />
                 </div>
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
-                <Link to={`/news/${article.id}`}>
+                <Link to={`/news/${article.id_news}`}>
                   <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
                     {article.title}
                   </h3>
@@ -96,7 +117,7 @@ const CategoryPage = () => {
                   {truncateDescription(article.description, 10)}
                 </p>
                 <Link
-                  to={`/news/${article.id}`}
+                  to={`/news/${article.id_news}`}
                   className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
@@ -110,9 +131,7 @@ const CategoryPage = () => {
               <>
                 <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
                   <img
-                    src={
-                      articles[2].image_url || "https://via.placeholder.com/150"
-                    }
+                    src={articles[2].image || "https://via.placeholder.com/150"}
                     alt={articles[2].title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
                   />
@@ -120,7 +139,7 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(articles[2].published_at)}
                 </p>
-                <Link to={`/news/${articles[2].id}`}>
+                <Link to={`/news/${articles[2].id_news}`}>
                   <h2 className="text-lg font-bold mt-2 hover:text-gray-500">
                     {articles[2].title}
                   </h2>
@@ -129,7 +148,7 @@ const CategoryPage = () => {
                   {truncateDescription(articles[2].description, 10)}
                 </p>
                 <Link
-                  to={`/news/${articles[2].id}`}
+                  to={`/news/${articles[2].id_news}`}
                   className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
@@ -140,10 +159,10 @@ const CategoryPage = () => {
 
           <div className="md:col-span-1 space-y-4">
             {articles.slice(3, 5).map((article) => (
-              <div key={article.id} className="p-4">
+              <div key={article.id_news} className="p-4">
                 <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
                   <img
-                    src={article.image_url || "https://via.placeholder.com/150"}
+                    src={article.image || "https://via.placeholder.com/150"}
                     alt={article.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
                   />
@@ -151,7 +170,7 @@ const CategoryPage = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   {formatDateIndonesian(article.published_at)}
                 </p>
-                <Link to={`/news/${article.id}`}>
+                <Link to={`/news/${article.id_news}`}>
                   <h3 className="text-sm font-bold mt-2 line-clamp-4 hover:text-gray-500">
                     {article.title}
                   </h3>
@@ -160,7 +179,7 @@ const CategoryPage = () => {
                   {truncateDescription(article.description, 10)}
                 </p>
                 <Link
-                  to={`/news/${article.id}`}
+                  to={`/news/${article.id_news}`}
                   className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                 >
                   Read More
@@ -181,13 +200,13 @@ const CategoryPage = () => {
               <div className="flex flex-col md:flex-row mb-4" key={index}>
                 <div className="relative overflow-hidden rounded-lg shadow-lg w-full md:w-48">
                   <img
-                    src={news.image_url || "https://via.placeholder.com/150"}
+                    src={news.image || "https://via.placeholder.com/150"}
                     alt={news.title}
                     className="w-full h-48 md:h-full object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
                   />
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-4 flex-grow">
-                  <Link to={`/news/${news.id}`}>
+                  <Link to={`/news/${news.id_news}`}>
                     <h3 className="text-sm font-bold mt-2 hover:text-gray-500">
                       {news.title}
                     </h3>
@@ -201,7 +220,7 @@ const CategoryPage = () => {
                       : news.description}
                   </p>
                   <Link
-                    to={`/news/${news.id}`}
+                    to={`/news/${news.id_news}`}
                     className="inline-flex items-center font-medium text-gray-400 hover:text-gray-900 dark:hover:text-black"
                   >
                     Read More

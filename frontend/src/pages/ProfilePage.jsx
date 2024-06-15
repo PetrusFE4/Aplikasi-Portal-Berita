@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [favoriteNews, setFavoriteNews] = useState([]);
+  const [favoriteArticles, setFavoriteArticles] = useState([]);
+  const [selectedArticle, setSelectedArticle] = useState(null); // State untuk menyimpan artikel yang dipilih
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const id = sessionStorage.getItem("id");
+      const token = sessionStorage.getItem("token");
+      if (!id || !token) {
+        console.error("User ID or token not found in sessionStorage");
+        return;
+      }
+
       try {
-        // Mock user data
-        const mockUserData = {
-          profilePicture: null, // Assume no profile picture is set
-          username: "john_doe",
-          email: "john.doe@example.com",
-          phone: "123-456-7890",
-          gender: "Male",
-          birthdate: "1990-01-01",
-          address: "123 Main Street, Anytown, USA",
-          job: "Software Developer",
-        };
-        setUser(mockUserData);
+        const response = await axios.get(`http://localhost:5050/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
@@ -34,38 +40,49 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchFavoriteNews = async () => {
       try {
-        // Mock favorite news data
-        const mockFavoriteNews = [
-          { id: 1, title: "Berita Favorit 1", cover: "cover1.jpg" },
-          { id: 2, title: "Berita Favorit 2", cover: "cover2.jpg" },
-          { id: 3, title: "Berita Favorit 3", cover: "cover3.jpg" },
-          { id: 4, title: "Berita Favorit 4", cover: "cover4.jpg" },
-          { id: 5, title: "Berita Favorit 5", cover: "cover5.jpg" },
-          { id: 6, title: "Berita Favorit 6", cover: "cover6.jpg" },
-        ];
-        setFavoriteNews(mockFavoriteNews);
+        const response = await axios.get("http://localhost:5050/favorites", {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+          }
+        });
+        setFavoriteNews(response.data); // Assuming response.data is an array of favorite news objects
       } catch (error) {
         console.error("Error fetching favorite news:", error);
+      } finally {
+        setLoading(false); // Update loading state after fetching favorite news
       }
     };
 
     fetchFavoriteNews();
   }, []);
 
-  const handleChangePassword = () => {
-    alert("Change Password feature is under construction.");
+  useEffect(() => {
+    const fetchFavoriteArticles = async () => {
+      try {
+        const newsIds = favoriteNews.map((fav) => fav.id_news);
+        const articleRequests = newsIds.map((newsId) =>
+          axios.get(`http://localhost:5050/news/${newsId}`)
+        );
+        const articleResponses = await Promise.all(articleRequests);
+        const articlesData = articleResponses.map((response) => response.data);
+        setFavoriteArticles(articlesData);
+      } catch (error) {
+        console.error("Error fetching favorite articles:", error);
+      }
+    };
+
+    fetchFavoriteArticles();
+  }, [favoriteNews]);
+
+  const handleNavigateToChangePassword = () => {
+    navigate(`/changepassword`);
   };
 
-  const handleEditProfile = () => {
-    alert("Edit Profile feature is under construction.");
-  };
+  const handleArticleClick = (article) => {
+    setSelectedArticle(article); // Set artikel yang dipilih ke state
 
-  const handleCompleteData = () => {
-    alert("Complete Data feature is under construction.");
-  };
-
-  const handleEditFavorites = () => {
-    alert("Edit Favorites feature is under construction.");
+    // Navigasi ke halaman detail berita dengan membawa ID artikel
+    navigate(`/news/${article.id_news}`);
   };
 
   return (
@@ -87,11 +104,11 @@ const ProfilePage = () => {
                   <div className="rounded-lg bg-white p-6 shadow-lg w-full md:w-3/4">
                     {/* Profile Picture and Basic Info */}
                     <div className="flex flex-col items-center">
-                      <img
-                        src="../../../assets/profile.jpg"
-                        alt="Profile"
-                        className="w-32 h-32 rounded-full mb-4"
-                      />
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
+                          alt="Profile"
+                          className="w-32 h-32 rounded-full mb-4"
+                        />
                       <h2 className="text-2xl font-semibold mb-2">{user.username}</h2>
                       <div className="flex items-center mb-2">
                         <p className="text-lg">{user.email}</p>
@@ -99,76 +116,42 @@ const ProfilePage = () => {
                     </div>
                     {/* Edit Profile and Change Password */}
                     <div className="mt-4 flex flex-col items-center">
-                      <button
-                        onClick={handleEditProfile}
-                        className="text-gray-600 hover:text-black text-sm py-2 font-bold transition-colors duration-300"
-                      >
-                        Ubah Profil
-                      </button>
-                      <button
-                        onClick={handleChangePassword}
-                        className="text-gray-600 hover:text-black text-sm py-2 font-bold transition-colors duration-300"
-                      >
-                        Ganti Password
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                {/* Additional Info */}
-                <div className="flex justify-center">
-                  <div className="rounded-lg bg-white p-6 shadow-lg w-full md:w-3/4">
-                  <div className="mb-4 flex items-center">
-                      <p className="text-lg">
-                        <span className="font-semibold">Telepon:</span> {user.phone}
-                      </p>
-                    </div>
-                    <div className="mb-4 flex items-center">
-                      <p className="text-lg font-semibold">Alamat:</p>
-                      <p className="ml-2">{user.address}</p>
-                    </div>
-                    <div className="mb-4 flex items-center">
-                      <p className="text-lg font-semibold">Pekerjaan:</p>
-                      <p className="ml-2">{user.job}</p>
-                    </div>
-                    <div className="mb-4 flex items-center">
-                      <p className="text-lg font-semibold">Gender:</p>
-                      <p className="ml-2">{user.gender}</p>
-                    </div>
-                    <div className="mb-4 flex items-center">
-                      <p className="text-lg font-semibold">Tanggal Lahir:</p>
-                      <p className="ml-2">{user.birthdate}</p>
-                    </div>
                     <button
-                      onClick={handleCompleteData}
-                      className="text-gray-600 hover:text-black text-sm py-2 font-bold transition-colors duration-300"
-                    >
-                      Lengkapi Data
-                    </button>
+        onClick={handleNavigateToChangePassword}
+        className="text-gray-600 hover:text-black text-sm py-2 font-bold transition-colors duration-300"
+      >
+        Ganti Password
+      </button>
+                      
+                    </div>
                   </div>
                 </div>
+            
               </>
             )}
           </div>
           {/* Edit Favorites */}
           <div className="mt-12 flex justify-center">
-            <button
-              onClick={handleEditFavorites}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded flex items-center"
-            >
-              Edit Berita Favorit
-            </button>
+            
           </div>
-          {/* Favorite News */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
-            {favoriteNews.map((news) => (
-              <div key={news.id} className="bg-white rounded-lg overflow-hidden shadow-md">
-                <img className="w-full h-48 object-cover" src={news.cover} alt={news.title} />
-                <div className="p-4">
-                  <p className="text-lg font-semibold mb-2">{news.title}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+
+          {/* Favorite Articles */}
+<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
+  {favoriteArticles.map((article, index) => (
+    <div
+      key={index} // Menggunakan indeks sebagai kunci
+      className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
+      onClick={() => handleArticleClick(article)}
+    >
+      <img className="w-full h-48 object-cover" src={article.image} alt={article.title} />
+      <div className="p-4">
+        <p className="text-lg font-semibold mb-2">{article.title}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+
         </div>
       )}
     </>

@@ -4,67 +4,79 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Tambah = () => {
-  const [nama, setNama] = useState("");
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null);
+  const [formData, setFormData] = useState({
+    name: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
+      const token = sessionStorage.getItem("token") || ""; // Get token from sessionStorage
       const response = await axios.post(
-        "https://apiberita.pandekakode.com/api/kategori",
-        { nama }
+        "http://localhost:5050/categories",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      if (response.data.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Berhasil",
-          text: response.data.message,
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          setNama("");
-          navigate("/admin/kategori");
-        });
-      }
+      console.log(response.data);
+      setFormData({
+        name: "",
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Kategori berhasil ditambahkan!",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        navigate("/admin/kategori"); // Redirect to the specified route
+      });
     } catch (error) {
-      let errorMessage = "Error adding category";
-      if (error.response && error.response.data) {
-        errorMessage = error.response.data.message || errorMessage;
-      }
-      setError(errorMessage);
+      console.error("Error adding category: ", error);
       Swal.fire({
         icon: "error",
         title: "Gagal",
-        text: errorMessage,
+        text: "Gagal menambahkan kategori.",
       });
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-8">
-      <h2 className="text-lg font-semibold mb-4">Tambah Kategori</h2>
+    <div className="max-w-xl mx-auto mt-8">
+      <h2 className="text-2xl font-semibold mb-4">Tambah Kategori</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label className="block">Nama:</label>{" "}
+          <span className="text-red-500">*</span>
           <input
             type="text"
-            id="nama"
-            value={nama}
-            onChange={(e) => setNama(e.target.value)}
-            className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            placeholder="Nama Kategori"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             required
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
-          Tambah
+          Tambah Kategori
         </button>
-        {error && <p className="mt-2 text-red-500">{error}</p>}
       </form>
     </div>
   );
