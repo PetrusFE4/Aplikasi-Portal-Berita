@@ -89,73 +89,64 @@ const ProfilePage = () => {
     <>
       {loading ? (
         <div className="flex justify-center items-center h-screen">
-          <div className="spinner-border text-primary" role="status">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-          </div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
         </div>
       ) : (
         <div className="container mx-auto max-w-screen-lg p-4 mt-20 md:mt-36">
           <h1 className="text-2xl font-bold mb-8 text-center">Profil Pengguna</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center">
+          <div className="container mx-auto py-8">
             {user && (
-              <>
+              <div className="grid grid-cols-1  justify-center">
                 {/* Profile Section */}
                 <div className="flex justify-center">
-                  <div className="rounded-lg bg-white p-6 shadow-lg w-full md:w-3/4">
+                  <div className="rounded-lg bg-white p-8 shadow-lg w-full md:w-3/4">
                     {/* Profile Picture and Basic Info */}
                     <div className="flex flex-col items-center">
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
-                          alt="Profile"
-                          className="w-32 h-32 rounded-full mb-4"
-                        />
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
+                        alt="Profile"
+                        className="w-32 h-32 rounded-full mb-4"
+                      />
                       <h2 className="text-2xl font-semibold mb-2">{user.username}</h2>
-                      <div className="flex items-center mb-2">
-                        <p className="text-lg">{user.email}</p>
-                      </div>
+                      <p className="text-lg text-gray-700">{user.email}</p>
                     </div>
                     {/* Edit Profile and Change Password */}
-                    <div className="mt-4 flex flex-col items-center">
-                    <button
-        onClick={handleNavigateToChangePassword}
-        className="text-gray-600 hover:text-black text-sm py-2 font-bold transition-colors duration-300"
-      >
-        Ganti Password
-      </button>
-                      
+                    <div className="mt-6 flex flex-col items-center">
+                      <button
+                        onClick={handleNavigateToChangePassword}
+                        className="text-sm py-2 font-bold text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                      >
+                        Ganti Password
+                      </button>
                     </div>
                   </div>
                 </div>
-            
-              </>
+              </div>
             )}
           </div>
-          {/* Edit Favorites */}
-          <div className="mt-12 flex justify-center">
-            
-          </div>
-
+  
           {/* Favorite Articles */}
-<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
-  {favoriteArticles.map((article, index) => (
-    <div
-      key={index} // Menggunakan indeks sebagai kunci
-      className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
-      onClick={() => handleArticleClick(article)}
-    >
-      <img className="w-full h-48 object-cover" src={article.image} alt={article.title} />
-      <div className="p-4">
-        <p className="text-lg font-semibold mb-2">{article.title}</p>
-      </div>
-    </div>
-  ))}
-</div>
+          <h1 className="text-2xl font-bold mb-8 text-center">Berita Tersimpan</h1>
 
-
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
+            {favoriteArticles.map((article, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
+                onClick={() => handleArticleClick(article)}
+              >
+                <img className="w-full h-48 object-cover" src={article.image} alt={article.title} />
+                <div className="p-4">
+                  <p className="text-lg font-semibold mb-2">{article.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </>
   );
+  
 };
 
 export default ProfilePage;

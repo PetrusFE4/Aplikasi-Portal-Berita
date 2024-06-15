@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
 
     // Validasi form
     if (!oldPassword || !newPassword) {
-      setError("Password lama dan password baru harus diisi.");
+      Swal.fire('Error', 'Password lama dan password baru harus diisi.', 'error');
       return;
     }
 
@@ -32,11 +29,11 @@ const ChangePassword = () => {
         }
       );
 
-      setSuccessMessage(response.data.message);
+      Swal.fire('Success', response.data.message, 'success');
       setOldPassword("");
       setNewPassword("");
     } catch (error) {
-      setError("Gagal mengubah password. Silakan coba lagi.");
+      Swal.fire('Error', 'Gagal mengubah password. Silakan coba lagi.', 'error');
       console.error("Error changing password:", error);
     }
   };
@@ -46,8 +43,6 @@ const ChangePassword = () => {
       <h1 className="text-2xl font-bold mb-8 text-center">Ubah Password</h1>
       <div className="w-full max-w-md mx-auto">
         <form onSubmit={handleChangePassword} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          {error && <div className="text-red-500 mb-4">{error}</div>}
-          {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="oldPassword">
               Password Lama

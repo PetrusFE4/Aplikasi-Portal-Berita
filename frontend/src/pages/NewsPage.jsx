@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { IoShareSocial } from "react-icons/io5";
 import { BiSolidBookmarkAltPlus, BiSolidBookmarkMinus } from "react-icons/bi";
+import Swal from 'sweetalert2';
 
 const NewsPage = () => {
   const { id } = useParams();
@@ -27,25 +28,19 @@ const NewsPage = () => {
     };
 
     const fetchComments = async () => {
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-
       try {
-        const response = await axios.get(`http://localhost:5050/comments/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // Fetch comments
+        const response = await axios.get(`http://localhost:5050/comments/${id}`);
+        const comments = response.data;
+
+        // Fetch user data for each comment
         const commentsWithUser = await Promise.all(
-          response.data.map(async (comment) => {
-            const userResponse = await axios.get(`http://localhost:5050/users/${comment.id_user}`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
+          comments.map(async (comment) => {
+            const userResponse = await axios.get(`http://localhost:5050/users/${comment.id_user}`);
             return { ...comment, user: userResponse.data.name };
           })
         );
+
         setComments(commentsWithUser);
       } catch (error) {
         console.error("Error fetching comments:", error);
@@ -88,13 +83,13 @@ const NewsPage = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (commentContent.trim() === "") {
-      alert("Komentar tidak boleh kosong!");
+      Swal.fire('Error', 'Komentar tidak boleh kosong!', 'error');
       return;
     }
 
     const token = sessionStorage.getItem("token");
     if (!token) {
-      alert("Anda harus login terlebih dahulu untuk mengirim komentar.");
+      Swal.fire('Error', 'Anda harus login terlebih dahulu untuk mengirim komentar.', 'error');
       return;
     }
 
@@ -111,8 +106,9 @@ const NewsPage = () => {
           },
         }
       );
-      alert("Komentar berhasil dikirim!");
-      window.location.reload();  // Reload halaman setelah submit komentar
+      Swal.fire('Success', 'Komentar berhasil dikirim!', 'success').then(() => {
+        window.location.reload();  // Reload halaman setelah submit komentar
+      });
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
@@ -121,14 +117,14 @@ const NewsPage = () => {
   const handleShare = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
-      alert("Berita sudah disalin, bagikan ke rekan anda!");
+      Swal.fire('Success', 'Berita sudah disalin, bagikan ke rekan anda!', 'success');
     });
   };
 
   const handleBookmark = async () => {
     const token = sessionStorage.getItem("token");
     if (!token) {
-      alert("Anda harus login terlebih dahulu untuk menandai berita sebagai favorit.");
+      Swal.fire('Error', 'Anda harus login terlebih dahulu untuk menandai berita sebagai favorit.', 'error');
       return;
     }
 
@@ -139,7 +135,7 @@ const NewsPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        alert("Berita berhasil dihapus dari favorit!");
+        Swal.fire('Success', 'Berita berhasil dihapus dari favorit!', 'success');
       } else {
         await axios.post(
           "http://localhost:5050/news/favorite",
@@ -150,12 +146,12 @@ const NewsPage = () => {
             },
           }
         );
-        alert("Berita berhasil ditandai sebagai favorit!");
+        Swal.fire('Success', 'Berita berhasil ditandai sebagai favorit!', 'success');
       }
       setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Error bookmarking the news:", error);
-      alert("Terjadi kesalahan saat mengelola favorit.");
+      Swal.fire('Error', 'Terjadi kesalahan saat mengelola favorit.', 'error');
     }
   };
 
@@ -180,7 +176,7 @@ const NewsPage = () => {
   return (
     <div className="mx-auto max-w-screen-lg p-4 light theme-light mt-20 md:mt-36">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="md:col-span-4">
+        <div className="md:col-span-5">
           <div className="mt-1 mb-2 flex items-center">
             {/* BREADCRUMB */}
             <nav className="flex" aria-label="Breadcrumb">
@@ -284,20 +280,27 @@ const NewsPage = () => {
           <h3 className="text-sm font-bold mt-1 mb-2">{news.title}</h3>
           <div className="text-justify">{news.content}</div>
           <hr className="my-4 border-t border-gray-300" />
-          <div>
-            <h3 className="text-lg font-semibold">Komentar</h3>
-            <ul className="mt-4">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-2xl font-semibold border-b pb-2 mb-4">Komentar</h3>
+            <ul className="space-y-4">
               {comments.map((comment) => (
-                <li key={comment.id_comment} className="mb-2">
-                  <p className="font-semibold">{comment.user}</p>
-                  <p className="text-sm text-gray-500">{formatDateIndonesian(comment.created_at)}</p>
-                  <p>{comment.comment}</p>
+                <li key={comment.id_comment} className="border-b pb-4">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center">
+                      <span className="text-white font-semibold">{comment.user[0]}</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{comment.user}</p>
+                      <p className="text-sm text-gray-500">{formatDateIndonesian(comment.created_at)}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-800">{comment.comment}</p>
                 </li>
               ))}
             </ul>
-            <form onSubmit={handleCommentSubmit}>
+            <form onSubmit={handleCommentSubmit} className="mt-6">
               <textarea
-                className="w-full p-2 border rounded mt-4"
+                className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                 rows="4"
                 placeholder="Tulis komentar anda..."
                 value={commentContent}
@@ -305,20 +308,19 @@ const NewsPage = () => {
               ></textarea>
               <button
                 type="submit"
-                className="mt-2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                className="mt-3 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
-                Submit
+                Kirim
               </button>
             </form>
           </div>
         </div>
-        <div className="md:col-span-1">
-          {/* Konten samping */}
+        {/* <div className="md:col-span-1">
           <div className="bg-gray-200 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Iklan</h3>
             <p>Mie Sedap</p>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Daftar Berita Lainnya */}
