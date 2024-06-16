@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { IoShareSocial } from "react-icons/io5";
-import { BiSolidBookmarkAltPlus, BiSolidBookmarkMinus } from "react-icons/bi";
+import { BiBookmarkHeart, BiSolidBookmarkMinus } from "react-icons/bi";
 import Swal from 'sweetalert2';
 
 const NewsPage = () => {
@@ -222,21 +222,7 @@ const NewsPage = () => {
                 </li>
                 <li aria-current="page">
                   <div className="flex items-center">
-                    <svg
-                      className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 6 10"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 9 4-4-4-4"
-                      />
-                    </svg>
+                   
                     <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
                       News
                     </span>
@@ -247,23 +233,7 @@ const NewsPage = () => {
             {/* BREADCRUMB */}
           </div>
           <h2 className="text-2xl font-bold mt-1 mb-2">{news.title}</h2>
-          <div className="flex gap-9 mt-3 mb-3">
-            <IoShareSocial
-              className="text-2xl text-blue-500 cursor-pointer hover:text-green-700"
-              onClick={handleShare}
-            />
-            {isFavorite ? (
-              <BiSolidBookmarkMinus
-                className="text-2xl text-red-500 cursor-pointer hover:text-red-700"
-                onClick={handleBookmark}
-              />
-            ) : (
-              <BiSolidBookmarkAltPlus
-                className="text-2xl text-green-500 cursor-pointer hover:text-green-700"
-                onClick={handleBookmark}
-              />
-            )}
-          </div>
+         
 
           <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
             <img
@@ -276,6 +246,23 @@ const NewsPage = () => {
           <p className="text-sm text-gray-500 mt-2">
             {formatDateIndonesian(news.published_at)}
           </p>
+          <div className="flex gap-6 mb-3 justify-end">
+            <IoShareSocial
+              className="text-4xl text-blue-500 cursor-pointer hover:text-green-700"
+              onClick={handleShare}
+            />
+            {isFavorite ? (
+              <BiBookmarkHeart
+                className="text-4xl text-red-400 cursor-pointer hover:text-red-700"
+                onClick={handleBookmark}
+              />
+            ) : (
+              <BiBookmarkHeart
+                className="text-4xl text-gray-500 cursor-pointer hover:text-gray-700"
+                onClick={handleBookmark}
+              />
+            )}
+          </div>
           <hr className="my-4 border-t border-gray-300" />
           <h3 className="text-sm font-bold mt-1 mb-2">{news.title}</h3>
           <div className="text-justify">{news.content}</div>
@@ -308,7 +295,7 @@ const NewsPage = () => {
               ></textarea>
               <button
                 type="submit"
-                className="mt-3 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="flex justify-end mt-3 w-200 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 Kirim
               </button>
@@ -323,33 +310,33 @@ const NewsPage = () => {
         </div> */}
       </div>
 
-      {/* Daftar Berita Lainnya */}
       <div className="mt-1">
-        <h2 className="text-2xl font-bold mb-8">Berita Lainnya</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {latestNews.slice(3, 7).map((newsItem, index) => (
-            <div key={index}>
-              <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
-                <img
-                  src={newsItem.image}
-                  alt={newsItem.title}
-                  className="w-full md:w-11/12 h-40 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
-                />
-              </div>
-              <span className="block text-xs text-gray-600 mt-1">
-                {formatDateIndonesian(newsItem.published_at)}
-              </span>
-              <div className="mt-2">
-                <Link to={`/news/${newsItem.id_news}`}>
-                  <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
-                    {newsItem.title}
-                  </h3>
-                </Link>
-              </div>
-            </div>
-          ))}
+  <h2 className="text-2xl font-bold mb-8">Berita Lainnya</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    {latestNews.slice(3, 7).map((newsItem, index) => (
+      <div key={index} className="flex flex-col">
+        <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+          <img
+            src={newsItem.image}
+            alt={newsItem.title}
+            className="w-full h-40 object-cover transition-transform duration-700 ease-in-out transform hover:scale-110 cursor-pointer"
+          />
+        </div>
+        <span className="block text-xs text-gray-600 mt-1">
+          {formatDateIndonesian(newsItem.published_at)}
+        </span>
+        <div className="mt-2">
+          <Link to={`/news/${newsItem.id_news}`}>
+            <h3 className="text-base font-bold mt-2 line-clamp-2 hover:text-gray-500">
+              {newsItem.title}
+            </h3>
+          </Link>
         </div>
       </div>
+    ))}
+  </div>
+</div>
+
     </div>
   );
 };

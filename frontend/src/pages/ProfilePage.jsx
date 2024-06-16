@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BiBookmarkHeart } from "react-icons/bi";
+import Swal from "sweetalert2";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -85,6 +87,26 @@ const ProfilePage = () => {
     navigate(`/news/${article.id_news}`);
   };
 
+  const handleBookmark = async (id) => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      await axios.delete(`http://localhost:5050/news/favorite/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      Swal.fire('Success', 'Berita berhasil dihapus dari favorit!', 'success');
+      // Update favorite news and articles after deletion
+      setFavoriteNews((prev) => prev.filter((fav) => fav.id_news !== id));
+      setFavoriteArticles((prev) => prev.filter((article) => article.id_news !== id));
+    } catch (error) {
+      console.error("Error removing favorite article:", error);
+      Swal.fire('Error', 'Gagal menghapus berita dari favorit.', 'error');
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -96,7 +118,7 @@ const ProfilePage = () => {
           <h1 className="text-2xl font-bold mb-8 text-center">Profil Pengguna</h1>
           <div className="container mx-auto py-8">
             {user && (
-              <div className="grid grid-cols-1  justify-center">
+              <div className="grid grid-cols-1 justify-center">
                 {/* Profile Section */}
                 <div className="flex justify-center">
                   <div className="rounded-lg bg-white p-8 shadow-lg w-full md:w-3/4">
@@ -124,21 +146,28 @@ const ProfilePage = () => {
               </div>
             )}
           </div>
-  
-          {/* Favorite Articles */}
-          <h1 className="text-2xl font-bold mb-8 text-center">Berita Tersimpan</h1>
 
+          {/* Favorite Articles */}
+
+          <h1 className="text-2xl font-bold mb-8 text-center">Berita Tersimpan</h1>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
             {favoriteArticles.map((article, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
+                className="relative bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
                 onClick={() => handleArticleClick(article)}
               >
                 <img className="w-full h-48 object-cover" src={article.image} alt={article.title} />
                 <div className="p-4">
                   <p className="text-lg font-semibold mb-2">{article.title}</p>
                 </div>
+                <BiBookmarkHeart
+                  className="absolute top-2 right-2 text-4xl text-red-500 cursor-pointer hover:text-red-700"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleBookmark(article.id_news);
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -146,7 +175,6 @@ const ProfilePage = () => {
       )}
     </>
   );
-  
 };
 
 export default ProfilePage;

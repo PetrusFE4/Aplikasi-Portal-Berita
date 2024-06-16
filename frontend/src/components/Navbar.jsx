@@ -96,7 +96,7 @@ const Navbar = () => {
     <div className="navbar-container">
       <nav className="navbar">
         <div className="navbar-left">
-          <FaBars className="icon hamburger" onClick={toggleMenu} />
+          <FaBars className="icon text-2xl hamburger" onClick={toggleMenu} />
         </div>
         <div className="navbar-center">
           <Link to="/" className="logo-link">
@@ -105,7 +105,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-right">
           <div className="user-menu" ref={userMenuRef}>
-            <FaUserCircle className="icon" onClick={toggleUserMenu} />
+            <FaUserCircle  className="text-2xl  icon" onClick={toggleUserMenu} />
             <div className={`user-dropdown-menu ${showUserMenu ? "show" : ""}`}>
               <ul>
                 {!isLoggedIn ? (
