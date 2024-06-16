@@ -1,4 +1,4 @@
-# WEB FRONTEND DEVELOPER - GAMELAB.ID
+# WEB FRONTEND DEVELOPER - GAMELAB.ID 
 # Aplikasi Portal Berita
 
 Aplikasi Portal Berita adalah sebuah aplikasi web yang dibangun menggunakan React JS untuk frontend dan Express JS untuk backend. Aplikasi ini memungkinkan pengguna untuk melihat berita terbaru dari berbagai kategori yang tersedia.
@@ -6,7 +6,6 @@ Aplikasi Portal Berita adalah sebuah aplikasi web yang dibangun menggunakan Reac
 ## Fitur
 
 - **Tampilan Berita**: Menampilkan daftar berita terbaru dengan judul, deskripsi singkat, gambar terkait, dan tanggal publikasi.
-- **Filter Berita**: Pengguna dapat memfilter berita berdasarkan kategori tertentu seperti teknologi, bisnis, dan lain-lain.
 - **Detail Berita**: Halaman detail untuk melihat berita secara lengkap dengan konten utama.
 - **Responsif**: Tampilan aplikasi dioptimalkan untuk desktop dan perangkat mobile.
 
