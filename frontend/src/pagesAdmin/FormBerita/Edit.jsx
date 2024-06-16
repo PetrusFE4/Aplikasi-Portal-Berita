@@ -1,173 +1,179 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Edit = () => {
-  const { id } = useParams(); // Ambil ID berita dari URL
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    content: "",
-    image: "",
-    id_category: "",
-    id_user: "",
-    published_at: "",
+  const { id_news } = useParams();
+  const [article, setArticle] = useState({
+    title: '',
+    description: '',
+    content: '',
+    image: '',
+    id_category: '',
+    id_user: '',
+    published_at: '',
   });
-  const [loading, setLoading] = useState(true); // State untuk loading
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // Ambil token dari sessionStorage
-  const token = sessionStorage.getItem("token") || "";
-  console.log("Token: ", token);
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        console.log(`Fetching data for ID: ${id}`);
-        const response = await axios.get(`http://localhost:5050/news/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(`http://localhost:5050/news/${id_news}`);
         console.log("Fetched article data:", response.data);
-
-        const { title, description, content, image, id_category, id_user, published_at } = response.data;
-        setFormData({
-          title,
-          description,
-          content,
-          image,
-          id_category: id_category.toString(), // Pastikan id_category berupa string
-          id_user: id_user.toString(), // Pastikan id_user berupa string
-          published_at, // Pastikan published_at dalam format yang benar
-        });
-        setLoading(false); // Set loading ke false setelah data diambil
+        setArticle(response.data);
       } catch (error) {
-        console.error("Error fetching article: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to fetch article data.",
-        });
-        setLoading(false); // Set loading ke false jika terjadi error
+        console.error("Error fetching article:", error);
+        setError(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchArticle();
-  }, [id, token]);
+  }, [id_news]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5050/categories');
+        console.log("Fetched categories data:", response.data);
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setError(error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setArticle((prevArticle) => ({
+      ...prevArticle,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = sessionStorage.getItem('token');
+    console.log("Submitting updated article data:", article);
+
+    // Create a new object excluding id_news, id_user, and published_at
+    const updatedArticle = {
+      title: article.title,
+      description: article.description,
+      content: article.content,
+      image: article.image,
+      id_category: article.id_category,
+    };
 
     try {
-      console.log("Submitting form data: ", formData);
-      const response = await axios.put(`http://localhost:5050/news/${id}`, formData, {
+      const response = await axios.put(`http://localhost:5050/news/${id_news}`, updatedArticle, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Update response:", response.data);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Article updated successfully!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      navigate("/admin/berita");
+      console.log("Response from server:", response);
+      if (response.status === 200) {
+        Swal.fire('Berhasil!', 'Artikel telah diperbarui.', 'success');
+        navigate('/admin/berita');
+      }
     } catch (error) {
-      console.error("Error updating article: ", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to update article.",
-      });
+      console.error("Error updating article:", error);
+      console.error("Error response data:", error.response.data);
+      Swal.fire('Error!', 'Gagal memperbarui artikel.', 'error');
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>; // Tampilan loading
-  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
-    <div className="max-w-xl mx-auto mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Edit Article</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block">Title:</label>{" "}
-          <span className="text-red-500">*</span>
+    <div className="container mx-auto px-4 sm:px-8 max-w-3xl mt-5">
+      <div className="py-8">
+        <h2 className="text-2xl font-semibold leading-tight mb-5">Edit Berita</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={article.title}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+            <textarea
+              name="description"
+              value={article.description}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Content</label>
+            <textarea
+              name="content"
+              value={article.content}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Image URL</label>
+            <input
+              type="text"
+              name="image"
+              value={article.image}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
+            <select
+              name="id_category"
+              value={article.id_category}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            >
+              {categories.map((category) => (
+                <option key={category.id_category} value={category.id_category}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Hidden Field for id_user */}
           <input
-            type="text"
-            name="title"
-            value={formData.title}
+            type="hidden"
+            name="id_user"
+            value={article.id_user}
             onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
           />
-        </div>
-        <div>
-          <label className="block">Description:</label>{" "}
-          <span className="text-red-500">*</span>
+          {/* Hidden Field for published_at */}
           <input
-            type="text"
-            name="description"
-            value={formData.description}
+            type="hidden"
+            name="published_at"
+            value={article.published_at}
             onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
           />
-        </div>
-        <div>
-          <label className="block">Content:</label>{" "}
-          <span className="text-red-500">*</span>
-          <textarea
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
-          ></textarea>
-        </div>
-        <div>
-          <label className="block">Image URL:</label>{" "}
-          <span className="text-red-500">*</span>
-          <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label className="block">Category:</label>{" "}
-          <span className="text-red-500">*</span>
-          <input
-            type="text"
-            name="id_category"
-            value={formData.id_category}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Update Article
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Update
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

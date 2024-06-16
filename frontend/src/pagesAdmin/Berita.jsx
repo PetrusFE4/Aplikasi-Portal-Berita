@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useEffect, useState } from 'react';
+import { FaPlusCircle } from 'react-icons/fa';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const Berita = () => {
   const [artikels, setArtikels] = useState([]);
@@ -12,19 +12,20 @@ const Berita = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem('token');
 
     const fetchArtikels = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/news");
+        const response = await axios.get('http://localhost:5050/news');
         const sortedArtikels = response.data.map((artikel) => ({
           ...artikel,
-          published_at: new Date(artikel.published_at).toLocaleDateString("id-ID", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
+          published_at: new Date(artikel.published_at).toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
           }),
         }));
         setArtikels(sortedArtikels);
@@ -37,7 +38,7 @@ const Berita = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/categories");
+        const response = await axios.get('http://localhost:5050/categories');
         setCategories(response.data);
       } catch (error) {
         setError(error);
@@ -46,7 +47,7 @@ const Berita = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/users/", {
+        const response = await axios.get('http://localhost:5050/users/', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -64,26 +65,30 @@ const Berita = () => {
 
   const findCategoryNameById = (id) => {
     const category = categories.find((category) => category.id_category === id);
-    return category ? category.name : "Unknown Category";
+    return category ? category.name : 'Unknown Category';
   };
 
   const findUserNameById = (id) => {
     const user = users.find((user) => user.id === id);
-    return user ? user.name : "Unknown User";
+    return user ? user.name : 'Unknown User';
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/admin/berita/edit/${id}`);
   };
 
   const handleDelete = async (id) => {
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem('token');
 
     Swal.fire({
-      title: "Apakah Anda yakin?",
-      text: "Anda tidak akan dapat mengembalikan ini!",
-      icon: "warning",
+      title: 'Apakah Anda yakin?',
+      text: 'Anda tidak akan dapat mengembalikan ini!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Ya, hapus!",
-      cancelButtonText: "Batal",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -94,10 +99,10 @@ const Berita = () => {
           });
           if (response.status === 200) {
             setArtikels(artikels.filter((artikel) => artikel.id_news !== id));
-            Swal.fire("Dihapus!", "Artikel telah dihapus.", "success");
+            Swal.fire('Dihapus!', 'Artikel telah dihapus.', 'success');
           }
         } catch (error) {
-          Swal.fire("Error!", "Gagal menghapus artikel.", "error");
+          Swal.fire('Error!', 'Gagal menghapus artikel.', 'error');
         }
       }
     });
@@ -197,14 +202,13 @@ const Berita = () => {
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm flex space-x-2">
-                      <Link to={`/admin/berita/edit/${artikel.id_news}`}>
-                        <button
-                          type="button"
-                          className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-blue-800"
-                        >
-                          Edit
-                        </button>
-                      </Link>
+                      <button
+                        onClick={() => handleEdit(artikel.id_news)}
+                        type="button"
+                        className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-blue-800"
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() => handleDelete(artikel.id_news)}
                         type="button"
@@ -213,54 +217,54 @@ const Berita = () => {
                         Delete
                       </button>
                     </td>
-                    </tr>
-                   ))}
-                 </tbody>
-               </table>
-             </div>
-           </div>
-           {/* Pagination */}
-           <nav className="block w-full">
-             <ul className="flex pl-0 rounded list-none flex-wrap">
-               <li>
-                 <button
-                   onClick={() => paginate(currentPage > 1 ? currentPage - 1 : currentPage)}
-                   className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
-                     currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                   }`}
-                 >
-                   Prev
-                 </button>
-               </li>
-               {Array.from({ length: Math.ceil(artikels.length / itemsPerPage) }, (_, i) => (
-                 <li key={i}>
-                   <button
-                     onClick={() => paginate(i + 1)}
-                     className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
-                       currentPage === i + 1 ? "bg-gray-200" : ""
-                     }`}
-                   >
-                     {i + 1}
-                   </button>
-                 </li>
-               ))}
-               <li>
-                 <button
-                   onClick={() =>
-                     paginate(currentPage < Math.ceil(artikels.length / itemsPerPage) ? currentPage + 1 : currentPage)
-                   }
-                   className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
-                     currentPage === Math.ceil(artikels.length / itemsPerPage) ? "opacity-50 cursor-not-allowed" : ""
-                   }`}
-                 >
-                   Next
-                 </button>
-               </li>
-             </ul>
-           </nav>
-         </div>
-       </div>
-     );
-   };
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {/* Pagination */}
+        <nav className="block w-full">
+          <ul className="flex pl-0 rounded list-none flex-wrap">
+            <li>
+              <button
+                onClick={() => paginate(currentPage > 1 ? currentPage - 1 : currentPage)}
+                className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
+                  currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                Prev
+              </button>
+            </li>
+            {Array.from({ length: Math.ceil(artikels.length / itemsPerPage) }, (_, i) => (
+              <li key={i}>
+                <button
+                  onClick={() => paginate(i + 1)}
+                  className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
+                    currentPage === i + 1 ? 'bg-gray-200' : ''
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              </li>
+            ))}
+            <li>
+              <button
+                onClick={() =>
+                  paginate(currentPage < Math.ceil(artikels.length / itemsPerPage) ? currentPage + 1 : currentPage)
+                }
+                className={`relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-gray-800 mr-1 hover:bg-gray-200 ${
+                  currentPage === Math.ceil(artikels.length / itemsPerPage) ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  );
+};
 
-   export default Berita;
+export default Berita;

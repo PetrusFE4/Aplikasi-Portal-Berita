@@ -29,6 +29,8 @@ import Users from "./pagesAdmin/Users";
 import KategoriTambah from "./pagesAdmin/FormKategori/Tambah";
 import BeritaTambah from "./pagesAdmin/FormBerita/Tambah";
 import BeritaEdit from "./pagesAdmin/FormBerita/Edit";
+import KategoriEdit from "./pagesAdmin/FormKategori/Edit";
+
 // ADMIN FORM
 
 const App = () => {
@@ -122,9 +124,11 @@ const App = () => {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="kategori" element={<AdminKategori />} />
                   <Route path="kategori/tambah" element={<KategoriTambah />} />
+                  <Route path="kategori/edit/:id_category" element={<KategoriEdit />} />
+
                   <Route path="berita" element={<AdminBerita />} />
                   <Route path="berita/tambah" element={<BeritaTambah />} />
-                  <Route path="berita/edit" element={<BeritaEdit />} />
+                  <Route path="berita/edit/:id_news" element={<BeritaEdit />} />
 
                   <Route path="users" element={<Users />} />
 
