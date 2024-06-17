@@ -1,10 +1,11 @@
 //database.js
-const mysql = require('mysql');
+const mysql = require("mysql");
 const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'api_portal'
+  host: "educalab.id",
+  port: 3307,
+  user: "YmnkZ50VkDnNt4y3",
+  password: "7jkv9C46aM6JNCTT",
+  database: "03inezlcUANdAZi6",
 });
 
 module.exports = db;
