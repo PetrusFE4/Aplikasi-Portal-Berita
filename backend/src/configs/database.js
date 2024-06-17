@@ -1,5 +1,5 @@
 //database.js
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const db = mysql.createPool({
   host: "educalab.id",
   port: 3307,
