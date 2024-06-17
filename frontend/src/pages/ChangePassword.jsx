@@ -20,7 +20,7 @@ const ChangePassword = () => {
       const token = sessionStorage.getItem("token"); // Ganti dengan cara Anda mendapatkan token
 
       const response = await axios.put(
-        "http://localhost:5050/change-password",
+        "https://api-msib-6-portal-berita-04.educalab.id/change-password",
         { oldPassword, newPassword },
         {
           headers: {

@@ -62,7 +62,7 @@ const Navbar = () => {
       try {
         // Fetch articles to get the category IDs
         const articlesResponse = await axios.get(
-          "http://localhost:5050/news"
+          "https://api-msib-6-portal-berita-04.educalab.id/news"
         );
 
         // Extract unique category IDs from the articles
@@ -72,7 +72,7 @@ const Navbar = () => {
 
         // Fetch categories to get category names
         const categoriesResponse = await axios.get(
-          "http://localhost:5050/categories"
+          "https://api-msib-6-portal-berita-04.educalab.id/categories"
         );
 
         // Filter and map categories to get only those that are used in articles

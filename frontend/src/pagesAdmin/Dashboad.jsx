@@ -15,9 +15,9 @@ const Dashboard = () => {
     const fetchCounts = async () => {
       try {
         const [newsResponse, categoriesResponse, usersResponse] = await Promise.all([
-          axios.get("http://localhost:5050/news"),
-          axios.get("http://localhost:5050/categories"),
-          axios.get("http://localhost:5050/users", {
+          axios.get("https://api-msib-6-portal-berita-04.educalab.id/news"),
+          axios.get("https://api-msib-6-portal-berita-04.educalab.id/categories"),
+          axios.get("https://api-msib-6-portal-berita-04.educalab.id/users", {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

@@ -24,7 +24,7 @@ const Tambah = () => {
     try {
       const token = sessionStorage.getItem("token") || ""; // Get token from sessionStorage
       const response = await axios.post(
-        "http://localhost:5050/categories",
+        "https://api-msib-6-portal-berita-04.educalab.id/categories",
         formData,
         {
           headers: {

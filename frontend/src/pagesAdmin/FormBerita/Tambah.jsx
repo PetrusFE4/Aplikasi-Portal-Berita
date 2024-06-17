@@ -30,7 +30,7 @@ const Tambah = () => {
     try {
       const token = sessionStorage.getItem("token") || ""; // Get token from sessionStorage
       const response = await axios.post(
-        "http://localhost:5050/news",
+        "https://api-msib-6-portal-berita-04.educalab.id/news",
         formData,
         {
           headers: {
@@ -69,7 +69,7 @@ const Tambah = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/categories"
+          "https://api-msib-6-portal-berita-04.educalab.id/categories"
         );
         setCategories(response.data); // Set categories state with data
       } catch (error) {

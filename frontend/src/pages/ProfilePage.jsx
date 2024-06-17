@@ -23,7 +23,7 @@ const ProfilePage = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5050/users/${id}`, {
+        const response = await axios.get(`https://api-msib-6-portal-berita-04.educalab.id/users/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -42,7 +42,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchFavoriteNews = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/favorites", {
+        const response = await axios.get("https://api-msib-6-portal-berita-04.educalab.id/favorites", {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`
           }
@@ -63,7 +63,7 @@ const ProfilePage = () => {
       try {
         const newsIds = favoriteNews.map((fav) => fav.id_news);
         const articleRequests = newsIds.map((newsId) =>
-          axios.get(`http://localhost:5050/news/${newsId}`)
+          axios.get(`https://api-msib-6-portal-berita-04.educalab.id/news/${newsId}`)
         );
         const articleResponses = await Promise.all(articleRequests);
         const articlesData = articleResponses.map((response) => response.data);
@@ -92,7 +92,7 @@ const ProfilePage = () => {
     if (!token) return;
 
     try {
-      await axios.delete(`http://localhost:5050/news/favorite/${id}`, {
+      await axios.delete(`https://api-msib-6-portal-berita-04.educalab.id/news/favorite/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
