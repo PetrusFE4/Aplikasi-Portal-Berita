@@ -23,20 +23,6 @@ exports.getAllNews = async (req, res) => {
         res.status(500).json({ message: 'Error fetching news' });
     }
 };
-exports.getNewsById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const news = await runQuery('SELECT * FROM tbl_news WHERE id_news = ?', [id]);
-        if (news.length === 0) {
-            return res.status(404).json({ message: 'News not found' });
-        }
-        res.json(news[0]);
-    } catch (error) {
-        console.error('Error fetching news by ID:', error.message);
-        res.status(500).json({ message: 'Error fetching news by ID' });
-    }
-};
-
 
 // Fungsi untuk menambahkan berita baru
 
@@ -62,14 +48,17 @@ exports.addNews = async (req, res) => {
 
 
 // Fungsi untuk mendapatkan berita berdasarkan ID
-exports.getNewsByCategory = async (req, res) => {
-    const { id_category } = req.params;
+exports.getNewsById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const news = await runQuery('SELECT * FROM tbl_news WHERE id_category = ?', [id_category]);
-        res.json(news);
+        const news = await runQuery('SELECT * FROM tbl_news WHERE id_news = ?', [id]);
+        if (news.length === 0) {
+            return res.status(404).json({ message: 'News not found' });
+        }
+        res.json(news[0]);
     } catch (error) {
-        console.error('Error fetching news by category:', error.message);
-        res.status(500).json({ message: 'Error fetching news by category' });
+        console.error('Error fetching news by ID:', error.message);
+        res.status(500).json({ message: 'Error fetching news by ID' });
     }
 };
 
@@ -86,23 +75,25 @@ exports.getNewsByCategory = async (req, res) => {
 };
 
 // Fungsi untuk memperbarui berita berdasarkan ID
-exports.updateNews = async (req, res) => { // Mengganti nama fungsi menjadi "updateNews"
+exports.updateNews = async (req, res) => {
     const { id } = req.params;
+    const id_user = req.userId;
     try {
-        const { title, description, content, image, id_category, id_user, published_at } = req.body;
+        const { title, description, content, image, id_category } = req.body;
         await runQuery(
             `UPDATE tbl_news 
-            SET title = ?, description = ?, content = ?, image = ?, id_category = ?, id_user = ?, published_at = ?
+            SET title = ?, description = ?, content = ?, image = ?, id_category = ?, id_user = ?
             WHERE id_news = ?`,
-            [title, description, content, image, id_category, id_user, published_at, id]
+            [title, description, content, image, id_category, id_user, id]
         );
-        console.log('Berita diperbarui:', req.body); // Menambahkan log
+        console.log('Berita diperbarui:', req.body); 
         res.json({ message: 'News updated successfully' });
     } catch (error) {
         console.error('Error updating news:', error.message);
         res.status(500).json({ message: 'Error updating news' });
     }
 };
+
 
 // Fungsi untuk menghapus berita berdasarkan ID
 exports.deleteNews = async (req, res) => { // Mengganti nama fungsi menjadi "deleteNews"

@@ -4,7 +4,7 @@ const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'portalberita'
+  database: 'api_portal'
 });
 
 module.exports = db;

@@ -49,6 +49,7 @@ exports.addFavorite = [
         }
     }
 ];
+
 exports.removeFavorite = [
     jwtAuth.verifyToken,
     async (req, res) => {
