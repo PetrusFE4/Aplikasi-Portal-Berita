@@ -163,3 +163,8 @@
     width: 100%;
   }
 }
+@media (min-width: 769px) {
+  .hamburger {
+    display: none; /* Hide navbar-left on screens wider than 768px */
+  }
+}

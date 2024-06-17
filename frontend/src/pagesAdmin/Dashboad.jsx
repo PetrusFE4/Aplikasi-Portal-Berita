@@ -69,8 +69,8 @@ const Dashboard = () => {
         <div className="flex flex-col w-full mb-10 sm:flex-row justify-center items-center">
           <div className="mt-2 flex flex-wrap justify-center items-center gap-6">
             <a
-              href="#"
-              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-blue-500"
+              href="/admin/berita"
+              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-blue-500 hover:bg-blue-100"
             >
               <div className="flex flex-row items-center justify-center">
                 <BiNews className="mr-3 fill-gray-500" />
@@ -80,8 +80,8 @@ const Dashboard = () => {
             </a>
 
             <a
-              href="#"
-              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-green-500"
+              href="/admin/kategori"
+              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-green-500 hover:bg-green-100"
             >
               <div className="flex flex-row items-center justify-center">
                 <BiListMinus className="mr-3 fill-gray-500" />
@@ -91,8 +91,8 @@ const Dashboard = () => {
             </a>
 
             <a
-              href="#"
-              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-red-500"
+              href="/admin/users"
+              className="flex h-40 w-80 flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white shadow-lg transition-colors duration-200 ease-in-out hover:border-red-500 hover:bg-red-100"
             >
               <div className="flex flex-row items-center justify-center">
                 <BiSolidUserDetail className="mr-3 fill-gray-500" />
